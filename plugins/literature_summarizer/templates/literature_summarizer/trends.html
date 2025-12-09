@@ -1,0 +1,121 @@
+{% extends "literature_summarizer/base.html" %}
+
+{% block content %}
+<h2 style="text-align:center; margin-bottom: 20px;">Trend Analysis</h2>
+
+<!-- Form -->
+<form method="get" style="max-width: 500px; margin: 0 auto 30px auto;">
+  <label for="keyword" style="display: block; margin-bottom: 15px;">
+    Keyword(s):
+    <input
+      type="text"
+      id="keyword"
+      name="keyword"
+      value="{{ keyword|default:'' }}"
+      placeholder="Enter keyword(s)"
+      style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+      required
+    >
+  </label>
+
+  <label for="count" style="display: block; margin-bottom: 15px;">
+    Number of records:
+    <input
+      type="number"
+      id="count"
+      name="count"
+      value="{{ count|default:'100' }}"
+      min="1"
+      max="200000"
+      style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"
+      required
+    >
+  </label>
+
+  <button type="submit" style="padding: 10px 16px; background-color: #007bff; border: none; color: white; border-radius: 4px; cursor: pointer; width: 100%;">
+    Search
+  </button>
+</form>
+
+{% if values %}
+  <h3 style="text-align:center; margin-bottom: 20px;">Trend Analysis for "{{ keyword }}"</h3>
+
+  <div style="
+      width: 820px;
+      margin: 0 auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      background: #fff;
+      border-radius: 8px;
+  ">
+    <canvas id="trendChart" width="800" height="400"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Mentions of "{{ keyword }}"',
+          data: {{ values|safe }},
+          borderColor: 'blue',
+          backgroundColor: 'rgba(0, 123, 255, 0.2)',
+          fill: true,
+          tension: 0.3,
+          pointRadius: 5,
+          pointHoverRadius: 7
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: {
+            display: true,
+            labels: {
+              font: { size: 14 }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Keyword Trend Over Time',
+            font: { size: 18 }
+          }
+        },
+        scales: {
+          x: {
+            title: {
+              display: true,
+              text: 'Year',
+              font: { size: 14 }
+            },
+            ticks: {
+              maxRotation: 45,
+              minRotation: 45,
+              font: { size: 12 }
+            }
+          },
+          y: {
+            title: {
+              display: true,
+              text: 'Number of Publications',
+              font: { size: 14 }
+            },
+            beginAtZero: true,
+            ticks: {
+              stepSize: 1,
+              font: { size: 12 }
+            }
+          }
+        }
+      }
+    });
+  </script>
+{% else %}
+  <p style="text-align:center; color:#555;">Enter a keyword and number of records above, then submit to see the trend.</p>
+{% endif %}
+
+{% endblock %}

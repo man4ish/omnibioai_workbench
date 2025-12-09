@@ -1,0 +1,234 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>OmniBioAI</title>
+<style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #6b8cff 0%, #3a5fff 100%);
+        color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 15px 40px;
+        background-color: rgba(0,0,0,0.3);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    header .logo-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    header img.logo {
+        width: 50px;
+        height: 50px;
+    }
+    header h1 {
+        margin: 0;
+        font-size: 2rem;
+    }
+    header .author {
+        font-style: italic;
+        font-weight: 600;
+        opacity: 0.7;
+    }
+    .search-bar {
+        width: 100%;
+        max-width: 400px;
+    }
+    .search-bar input {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: none;
+        font-size: 1rem;
+    }
+    .tabs {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin: 20px 0;
+        flex-wrap: wrap;
+    }
+    .tab {
+        background-color: rgba(255,255,255,0.1);
+        padding: 8px 16px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    .tab.active, .tab:hover {
+        background-color: rgba(107, 140, 255, 0.4);
+    }
+    main {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+    main p.description {
+        text-align: center;
+        font-size: 1.2rem;
+        color: #dfe4ff;
+        margin-bottom: 30px;
+    }
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+    .app-card {
+        background-color: rgba(255,255,255,0.05);
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.3s, background-color 0.3s;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .app-card:hover {
+        transform: translateY(-5px);
+        background-color: rgba(76,111,255,0.4);
+    }
+    .app-card a {
+        display: block;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 8px;
+        text-decoration: none;
+    }
+    .app-card a:hover {
+        text-decoration: underline;
+    }
+    .app-card p {
+        font-size: 0.95rem;
+        color: #e0e0ff;
+    }
+    footer {
+        text-align: center;
+        margin: 50px 0 20px;
+        font-size: 0.9rem;
+        color: #d0d0ff;
+        opacity: 0.7;
+    }
+    @media (max-width: 600px) {
+        header {
+            flex-direction: column;
+            align-items: center;
+        }
+        header .author {
+            position: static;
+            margin-top: 5px;
+        }
+    }
+</style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-title">
+            <img src="{% static 'images/logo.png' %}" alt="OmniBioAI Logo" class="logo" style="width:140px; height:50px;">
+        </div>
+      
+        <div class="search-bar">
+            <input type="text" id="appSearch" placeholder="Search apps...">
+        </div>
+    </header>
+
+<main>
+    <p class="description">
+        OmniBioAI is a comprehensive AI-powered bioinformatics workbench integrating LLM-based summarization, RAG, ML predictions, pipelines, genomic visualization, and network analysis. Quickly find and launch any tool you need.
+    </p>
+
+<div class="tabs">
+    <div class="tab active" data-category="all">All</div>
+    <div class="tab" data-category="ml">ML</div>
+    <div class="tab" data-category="genomics">Genomics</div>
+    <div class="tab" data-category="network">Network</div>
+    <div class="tab" data-category="rag">RAG/LLM</div>
+</div>
+
+<div class="dashboard-grid" id="appGrid">
+    <div class="app-card" data-category="pipeline">
+        <a href="{% url 'pipeline_manager:pipeline_home' %}">Pipeline Manager</a>
+        <p>Build, monitor, and manage pipelines with AI insights.</p>
+    </div>
+    <div class="app-card" data-category="genomics">
+        <a href="{% url 'igv_viewer:igv_home' %}">IGV Viewer</a>
+        <p>Interactive genomic visualization with AI tools.</p>
+    </div>
+    <div class="app-card" data-category="ml">
+        <a href="{% url 'ml_predictor:ml_predictor_upload' %}">ML Predictor Upload</a>
+        <p>Upload datasets and get fast AI-driven predictions.</p>
+    </div>
+    <div class="app-card" data-category="genomics">
+        <a href="{% url 'variant_annotation:index' %}">Variant Annotation</a>
+        <p>Annotate genetic variants using AI insights.</p>
+    </div>
+    <div class="app-card" data-category="genomics">
+        <a href="{% url 'gene_annotation:annotate' %}">Gene Annotation</a>
+        <p>AI-driven interpretation of gene annotations.</p>
+    </div>
+    <div class="app-card" data-category="ml">
+        <a href="{% url 'pathway_enrichment:upload' %}">Pathway Enrichment</a>
+        <p>Identify enriched biological pathways with AI.</p>
+    </div>
+    <div class="app-card" data-category="rag">
+        <a href="{% url 'literature_summarizer:literature_summary' %}">LLM Literature Summarizer</a>
+        <p>Summarize scientific papers with LLMs and RAG.</p>
+    </div>
+    <div class="app-card" data-category="network">
+        <a href="{% url 'network_analysis:upload_network' %}">Network Analysis</a>
+        <p>Explore biological networks with AI-driven insights.</p>
+    </div>
+    <div class="app-card" data-category="genomics">
+        <a href="{% url 'single_cell_analysis:upload_h5ad' %}">Single Cell Analysis</a>
+        <p>Analyze single-cell RNA-seq data with AI-enhanced plots.</p>
+    </div>
+</div>
+
+
+</main>
+
+<footer>
+    &copy; 2025 Manish Kumar. All rights reserved.
+</footer>
+
+<script>
+    const searchInput = document.getElementById('appSearch');
+    const appCards = document.querySelectorAll('.app-card');
+
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase();
+        appCards.forEach(card => {
+            const name = card.querySelector('a').textContent.toLowerCase();
+            card.style.display = name.includes(query) ? 'block' : 'none';
+        });
+    });
+
+    const tabs = document.querySelectorAll('.tab');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const category = tab.dataset.category;
+            appCards.forEach(card => {
+                card.style.display = (category === 'all' || card.dataset.category === category) ? 'block' : 'none';
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
+

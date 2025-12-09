@@ -1,0 +1,12 @@
+{
+    "name": "Gene Annotation",
+    "slug": "gene_annotation",
+    "version": "1.0",
+    "description": "Plugin to manage gene annotation data",
+    "author": "Manish Kumar",
+    "entry_point": "gene_annotation.urls",
+    "menu": {
+        "label": "Gene Annotation",
+        "icon": "fa-dna"
+    }
+}

@@ -1,0 +1,13 @@
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Show Gene UMAP</button>
+</form>
+
+{% if message %}
+  <p style="color: red;">{{ message }}</p>
+{% endif %}
+
+{% if img_path %}
+  <img src="{{ img_path }}" alt="UMAP plot for {{ gene_name }}">
+{% endif %}

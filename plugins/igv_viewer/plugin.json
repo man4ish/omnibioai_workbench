@@ -1,0 +1,13 @@
+{
+    "name": "IGV Viewer",
+    "slug": "igv_viewer",
+    "version": "1.0",
+    "description": "Integrative Genomics Viewer plugin for visualizing genomic data",
+    "author": "Manish Kumar",
+    "entry_point": "igv_viewer.urls",
+    "menu": {
+        "label": "IGV Viewer",
+        "icon": "fa-dna"
+    }
+}
+

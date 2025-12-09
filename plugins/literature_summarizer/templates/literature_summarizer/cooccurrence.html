@@ -1,0 +1,32 @@
+{% extends "literature_summarizer/base.html" %}
+
+{% block content %}
+<h2>Keyword Co-occurrence Network Search</h2>
+
+<form method="get" action="{% url 'literature_summarizer:keyword_network' %}">
+  <label for="query">Enter keyword(s):</label>
+  <input type="text" id="query" name="query" value="{{ request.GET.query }}">
+  <button type="submit">Search</button>
+</form>
+
+{% if elements %}
+  <h3>Keyword Co-occurrence Network for "{{ request.GET.query }}"</h3>
+  <div id="cy" style="width: 100%; max-width: 1000px; height: 600px; border: 1px solid #ccc; margin-top: 20px;"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.24.0/cytoscape.min.js"></script>
+  <script>
+    var cy = cytoscape({
+      container: document.getElementById('cy'),
+      elements: {{ elements|safe }},
+      style: [
+        { selector: 'node', style: { 'label': 'data(id)', 'background-color': '#2E86AB' }},
+        { selector: 'edge', style: { 'width': 'mapData(weight, 1, 10, 1, 5)', 'line-color': '#ccc' }}
+      ],
+      layout: { name: 'cose' }
+    });
+  </script>
+{% elif request.GET.query %}
+  <p style="margin-top: 20px;">No co-occurring keywords found for "<strong>{{ request.GET.query }}</strong>". Try a different term.</p>
+{% endif %}
+
+{% endblock %}

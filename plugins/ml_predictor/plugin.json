@@ -1,0 +1,12 @@
+{
+    "name": "ML Predictor",
+    "slug": "ml_predictor",
+    "version": "1.0",
+    "description": "Machine Learning prediction plugin for bioinformatics",
+    "author": "Manish Kumar",
+    "entry_point": "ml_predictor.urls",
+    "menu": {
+        "label": "ML Predictor",
+        "icon": "fa-robot"
+    }
+}

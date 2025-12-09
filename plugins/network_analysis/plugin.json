@@ -1,0 +1,12 @@
+{
+    "name": "Network Analysis",
+    "slug": "network_analysis",
+    "version": "1.0",
+    "description": "Plugin for biological network analysis",
+    "author": "Manish Kumar",
+    "entry_point": "network_analysis.urls",
+    "menu": {
+        "label": "Network Analysis",
+        "icon": "fa-network-wired"
+    }
+}

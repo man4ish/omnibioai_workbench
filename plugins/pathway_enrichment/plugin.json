@@ -1,0 +1,12 @@
+{
+    "name": "Pathway Enrichment",
+    "slug": "pathway_enrichment",
+    "version": "1.0",
+    "description": "Plugin for pathway enrichment analysis",
+    "author": "Manish Kumar",
+    "entry_point": "pathway_enrichment.urls",
+    "menu": {
+        "label": "Pathway Enrichment",
+        "icon": "fa-project-diagram"
+    }
+}

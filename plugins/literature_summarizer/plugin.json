@@ -1,0 +1,12 @@
+{
+    "name": "Literature Summarizer",
+    "slug": "literature_summarizer",
+    "version": "1.0",
+    "description": "Plugin for summarizing scientific literature",
+    "author": "Manish Kumar",
+    "entry_point": "literature_summarizer.urls",
+    "menu": {
+        "label": "Literature Summarizer",
+        "icon": "fa-book"
+    }
+}

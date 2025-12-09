@@ -1,0 +1,12 @@
+{
+    "name": "Single Cell Analysis",
+    "slug": "single_cell_analysis",
+    "version": "1.0",
+    "description": "Plugin for single-cell RNA-seq analysis",
+    "author": "Manish Kumar",
+    "entry_point": "single_cell_analysis.urls",
+    "menu": {
+        "label": "Single Cell Analysis",
+        "icon": "fa-microscope"
+    }
+}

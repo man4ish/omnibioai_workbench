@@ -1,0 +1,68 @@
+{% load widget_tweaks %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Upload Data for ML Prediction</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            color: #333;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 1.7em;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+        }
+        button {
+            margin-top: 25px;
+            padding: 12px 25px;
+            font-size: 1em;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #1f6391;
+        }
+    </style>
+</head>
+<body>
+    <h1>Select Analysis Type and Upload Data</h1>
+    <form method="post" enctype="multipart/form-data" action="{% url 'ml_predictor:ml_predictor_upload' %}">
+        {% csrf_token %}
+
+        <label for="{{ form.analysis_type.id_for_label }}">Select Analysis Type:</label>
+        {{ form.analysis_type|add_class:"form-control" }}
+
+        <label for="{{ form.data_file.id_for_label }}">Choose File to Upload:</label>
+        {{ form.data_file|add_class:"form-control" }}
+
+        <button type="submit">Upload & Predict</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+    "name": "Pipeline Manager",
+    "slug": "pipeline_manager",
+    "version": "1.0",
+    "description": "Plugin to manage bioinformatics pipelines",
+    "author": "Manish Kumar",
+    "entry_point": "pipeline_manager.urls",
+    "menu": {
+        "label": "Pipeline Manager",
+        "icon": "fa-project-diagram"
+    }
+}

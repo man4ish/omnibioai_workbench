@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Variant Annotation{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">  <!-- if using static CSS -->
+</head>
+<body>
+    <header>
+        <h1>Variant Annotation Tool</h1>
+        <!-- You can add a navbar here -->
+    </header>
+
+    <!-- Messages block -->
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <!-- Main content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Bioinformatics App</p>
+    </footer>
+</body>
+</html>

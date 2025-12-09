@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Annotation Results</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+
+  <!-- DataTables CSS -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css"
+  />
+
+  <style>
+    table, th, td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 5px 10px;
+    }
+    a {
+      text-decoration: none;
+      color: blue;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    tr:hover {
+      background-color: #f0f0f0;
+      cursor: pointer;
+    }
+    div.dataTables_wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
+
+    .charts-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: space-around;
+      margin-top: 20px;
+    }
+
+    .chart-canvas {
+      flex: 1 1 32%;
+      height: 300px;
+    }
+  </style>
+  <style>
+        /* Base table styles (for border consistency) */
+    table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    }
+
+    /* Smaller font and padding for entire table */
+    #variantsTable {
+    font-size: 12px !important;
+    border-collapse: collapse; /* ensure borders collapse */
+    }
+
+    /* Header cells */
+    #variantsTable.dataTable thead th {
+        font-size: 12px !important;
+        padding: 4px 6px !important;
+        vertical-align: middle !important;
+        white-space: nowrap !important;
+        border: 1px solid black !important;
+        background-color: #f2f2f2 !important;
+        font-weight: bold !important;
+    }
+
+    /* Body cells */
+    #variantsTable.dataTable tbody td {
+        font-size: 12px !important;
+        padding: 4px 6px !important;
+        vertical-align: middle !important;
+        white-space: nowrap !important;
+        border: 1px solid black !important;
+    }
+
+    /* Fix scroll container width */
+    div.dataTables_wrapper {
+    width: 100%;
+    overflow-x: auto;
+    }
+
+    /* Optional: cursor pointer on rows for click */
+    #variantsTable tbody tr:hover {
+    background-color: #f0f0f0;
+    cursor: pointer;
+    }
+  </style>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- DataTables JS and Buttons -->
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="p-3">
+  <h2>Annotation Results</h2>
+
+  <ul class="nav nav-tabs" id="resultTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="table-tab" data-bs-toggle="tab" data-bs-target="#tablePane" type="button" role="tab">
+        Table
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="charts-tab" data-bs-toggle="tab" data-bs-target="#chartsPane" type="button" role="tab">
+        Charts
+      </button>
+    </li>
+  </ul>
+
+  <div class="tab-content mt-3" id="resultTabsContent">
+    <div class="tab-pane fade show active" id="tablePane" role="tabpanel">
+      <table id="variantsTable" class="display" style="width:100%">
+        <thead>
+          <tr>
+            {% for col in variants[0].keys() %}
+              <th>{{ col }}</th>
+            {% endfor %}
+            <th>External Links</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for variant in variants %}
+          <tr onclick="jumpToBrowser('{{ variant['Chr'] }}', {{ variant['Start'] }}, {{ variant['End'] if 'End' in variant else variant['Start'] }})">
+            {% for key, val in variant.items() %}
+              <td>{{ val }}</td>
+            {% endfor %}
+            <td>
+              {% set chr = variant['Chr'] %}
+              {% set start = variant['Start'] %}
+              {% set end = variant['End'] if 'End' in variant else variant['Start'] %}
+              {% set variant_id = variant.get('VariantID', '') %}
+
+              <a href="https://genome.ucsc.edu/cgi-bin/hgTracks?db=hg38&position=chr{{ chr }}:{{ start }}-{{ end }}" target="_blank">UCSC</a> |
+              <a href="https://www.ensembl.org/Homo_sapiens/Location/View?r={{ chr }}:{{ start }}-{{ end }}" target="_blank">Ensembl</a>
+              {% if variant_id %}
+                | <a href="https://www.ncbi.nlm.nih.gov/clinvar/variation/{{ variant_id }}" target="_blank">ClinVar</a>
+                | <a href="https://www.ncbi.nlm.nih.gov/snp/{{ variant_id }}" target="_blank">dbSNP</a>
+              {% endif %}
+              | <a href="https://gnomad.broadinstitute.org/variant/chr{{ chr }}-{{ start }}" target="_blank">gnomAD</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="tab-pane fade" id="chartsPane" role="tabpanel">
+      <div class="charts-container">
+        <canvas id="variantChart" class="chart-canvas"></canvas>
+        <canvas id="variantPieChart" class="chart-canvas"></canvas>
+        <canvas id="scatterPlot" class="chart-canvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $(document).ready(function () {
+       $('#variantsTable').DataTable({
+            pageLength: 20,
+            order: [],
+            scrollX: true,   // keep horizontal scroll if needed
+            // scrollY: 550,  // removed to disable vertical scroll
+            dom: 'Bfrtip',
+            buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+            paging: true     // enable pagination (default true, but explicit is good)
+        });
+    });
+
+    const variantCounts = {{ variant_counts | tojson }};
+    const labels = Object.keys(variantCounts);
+    const data = Object.values(variantCounts);
+
+    let variantChart, variantPieChart, scatterChart;
+
+    function initializeCharts() {
+      const ctxBar = document.getElementById('variantChart').getContext('2d');
+      variantChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Number of Variants',
+            data: data,
+            backgroundColor: 'rgba(54, 162, 235, 0.6)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: false,
+          scales: {
+            y: { beginAtZero: true },
+            x: { title: { display: true, text: 'Chromosome' } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      const ctxPie = document.getElementById('variantPieChart').getContext('2d');
+      variantPieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Variant Distribution',
+            data: data,
+            backgroundColor: labels.map(() => `hsl(${Math.random() * 360}, 70%, 60%)`),
+            borderColor: '#fff',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: false,
+          plugins: {
+            legend: { position: 'right' },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  const value = context.parsed || 0;
+                  return `${context.label}: ${value} variant${value !== 1 ? 's' : ''}`;
+                }
+              }
+            }
+          }
+        }
+      });
+
+      const variantsData = {{ variants | tojson }};
+      function chrToNumber(chr) {
+        chr = chr.replace(/^chr/i, '');
+        return chr === 'X' ? 23 : chr === 'Y' ? 24 : chr === 'MT' || chr === 'M' ? 25 : Number(chr) || 0;
+      }
+
+      const scatterDataPoints = variantsData.map(v => ({
+        x: v.Start,
+        y: chrToNumber(v.Chr),
+      }));
+
+      const ctxScatter = document.getElementById('scatterPlot').getContext('2d');
+      scatterChart = new Chart(ctxScatter, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Variant Positions',
+            data: scatterDataPoints,
+            backgroundColor: 'rgba(255, 99, 132, 0.7)',
+          }]
+        },
+        options: {
+          responsive: false,
+          scales: {
+            x: { type: 'linear', title: { display: true, text: 'Variant Start Position' } },
+            y: {
+              type: 'linear',
+              title: { display: true, text: 'Chromosome Number' },
+              ticks: {
+                stepSize: 1,
+                callback: function(value) {
+                  return value === 23 ? 'X' : value === 24 ? 'Y' : value === 25 ? 'MT' : value;
+                }
+              },
+              min: 0,
+              max: 26
+            }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    document.getElementById('charts-tab').addEventListener('shown.bs.tab', function () {
+      if (!variantChart) {
+        initializeCharts();
+      }
+    });
+
+    function jumpToBrowser(chr, start, end) {
+      alert(`Clicked variant location: chr${chr}:${start}-${end}`);
+    }
+  </script>
+</body>
+</html>

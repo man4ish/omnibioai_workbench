@@ -1,0 +1,12 @@
+{
+    "name": "Home",
+    "slug": "home",
+    "version": "1.0",
+    "description": "Landing page and info about OmniBioAI",
+    "author": "Manish Kumar",
+    "entry_point": "home.urls",
+    "menu": {
+        "label": "Home",
+        "icon": "fa-home"
+    }
+}

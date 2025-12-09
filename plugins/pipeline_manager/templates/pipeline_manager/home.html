@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pipeline Job Manager</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+<div class="container py-5">
+
+    <h1 class="mb-4 text-center text-primary">Bioinformatics Pipeline Manager</h1>
+
+    <!-- Submit Job Form -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-header bg-success text-white">
+            Submit a New Job
+        </div>
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    {% for field in form %}
+                        <div class="mb-3 col-md-6">
+                            <label class="form-label">{{ field.label_tag }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Submitted Jobs -->
+    <h2 class="mb-3 text-secondary">Submitted Jobs</h2>
+    {% if jobs %}
+        <ul class="list-group shadow-sm">
+            {% for job in jobs %}
+                <li class="list-group-item d-flex justify-content-between align-items-start">
+                    <div>
+                        <a href="{% url 'pipeline_manager:job_detail' job.id %}" class="text-decoration-none">
+                            <strong>Job #{{ job.id }}</strong> — {{ job.pipeline_type|upper }}
+                        </a>
+                        <br>
+                        <small class="text-muted">Submitted on {{ job.created_at|date:"Y-m-d H:i" }}</small>
+                    </div>
+                    <span class="badge bg-info text-dark mt-2">{{ job.status }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="text-muted">No jobs submitted yet.</p>
+    {% endif %}
+
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

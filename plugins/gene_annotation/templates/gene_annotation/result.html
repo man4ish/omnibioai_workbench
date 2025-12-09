@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gene Annotation Result</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Gene Expression Summary</h1>
+    <pre>{{ summary }}</pre>
+    <h2>Visualization</h2>
+    {{ chart_html|safe }}
+    <a href="{% url 'gene_annotation:annotate' %}">Analyze another file</a>
+</body>
+</html>

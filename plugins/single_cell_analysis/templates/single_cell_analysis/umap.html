@@ -1,0 +1,110 @@
+{% extends "single_cell_analysis/base.html" %}
+
+{% block content %}
+<style>
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  h2 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #34495e;
+  }
+  select, input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #2980b9;
+  }
+  .message {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+  }
+  .plot-container {
+    margin-top: 40px;
+  }
+  .links {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .links a {
+    margin: 0 15px;
+    color: #3498db;
+    text-decoration: none;
+  }
+  .links a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="container">
+  <h2>Dimensionality Reduction Plot</h2>
+
+  {% if error %}
+    <div class="message">{{ error }}</div>
+  {% else %}
+    <p><strong>File:</strong> {{ filename }}</p>
+
+    <form method="get" action="{% url 'single_cell_analysis:umap_plot' %}">
+      {% csrf_token %}
+      {# Method selector #}
+      <label for="{{ form.method.id_for_label }}">{{ form.method.label }}</label>
+      {{ form.method }}
+      {% if form.method.errors %}
+        <div class="message">{{ form.method.errors|striptags }}</div>
+      {% endif %}
+
+      {# Color selector #}
+      <label for="{{ form.color_by.id_for_label }}">{{ form.color_by.label }}</label>
+      {{ form.color_by }}
+      {% if form.color_by.help_text %}
+        <small>{{ form.color_by.help_text }}</small>
+      {% endif %}
+      {% if form.color_by.errors %}
+        <div class="message">{{ form.color_by.errors|striptags }}</div>
+      {% endif %}
+
+      <button type="submit">Update Plot</button>
+    </form>
+
+    <div class="plot-container">
+      {{ plot_html|safe }}
+    </div>
+
+    <div class="links">
+      <a href="{% url 'single_cell_analysis:download_metadata' %}">Download Metadata</a> |
+      <a href="{% url 'single_cell_analysis:upload_h5ad' %}">Upload Another File</a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

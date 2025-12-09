@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head><title>Pathway Enrichment Results</title></head>
+<body>
+<h2>Enrichment Results</h2>
+
+<h3>Enrichr Output</h3>
+<pre>{{ enrichr_results|safe }}</pre>
+
+<h3>GSEA Output</h3>
+<pre>{{ gsea_results.gsea_results }}</pre>
+
+<a href="{% url 'pathway_enrichment:upload' %}">Upload Another File</a>
+</body>
+</html>

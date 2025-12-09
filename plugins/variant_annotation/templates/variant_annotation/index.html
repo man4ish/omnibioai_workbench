@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Variant Annotation App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #f9f9f9;
+      color: #333;
+    }
+
+    h1 {
+      color: #2c3e50;
+    }
+
+    /* Messages */
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-bottom: 20px;
+    }
+
+    ul li {
+      background-color: #ffeeba;
+      border: 1px solid #f5c6cb;
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 4px;
+      color: #856404;
+    }
+
+    /* Filter section */
+    .filter-section {
+      background: white;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+
+    .filter-section h3 {
+      margin-top: 0;
+      color: #34495e;
+    }
+
+    .filter-section label {
+      margin-right: 10px;
+      font-weight: 600;
+    }
+
+    .filter-section input[type="text"] {
+      padding: 6px;
+      margin-right: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 150px;
+    }
+
+    /* Table styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    thead {
+      background-color: #2980b9;
+      color: white;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    tbody tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* Form styles */
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 6px;
+      max-width: 400px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+
+    form label {
+      font-weight: 600;
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 6px;
+    }
+
+    select, input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      margin-top: 20px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #1c5980;
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Variant Annotation App</h1>
+
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% if variants %}
+  <div class="filter-section">
+    <h3>Filter Variants</h3>
+    <label for="geneFilter">Gene:</label>
+    <input
+      type="text"
+      id="geneFilter"
+      placeholder="Gene symbol"
+      onkeyup="applyFilters()"
+      aria-label="Filter by Gene symbol"
+    />
+    <label for="impactFilter">Impact (Func_refGene):</label>
+    <input
+      type="text"
+      id="impactFilter"
+      placeholder="Impact"
+      onkeyup="applyFilters()"
+      aria-label="Filter by Impact"
+    />
+  </div>
+
+  <table id="variantsTable" aria-describedby="variantList">
+    <thead>
+      <tr>
+        <th scope="col">Chr</th>
+        <th scope="col">Start</th>
+        <th scope="col">End</th>
+        <th scope="col">Ref</th>
+        <th scope="col">Alt</th>
+        <th scope="col">Function</th>
+        <th scope="col">Gene</th>
+        <th scope="col">Clinical Significance</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in variants %}
+      <tr>
+        <td>{{ v.Chr }}</td>
+        <td>{{ v.Start }}</td>
+        <td>{{ v.End }}</td>
+        <td>{{ v.Ref }}</td>
+        <td>{{ v.Alt }}</td>
+        <td>{{ v.Func_refGene }}</td>
+        <td>{{ v.Gene_refGene }}</td>
+        <td>{{ v.CLNSIG|default:v.ClinicalSignificance }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <script>
+    function applyFilters() {
+      const geneInput = document.getElementById('geneFilter').value.toLowerCase();
+      const impactInput = document.getElementById('impactFilter').value.toLowerCase();
+
+      const table = document.getElementById('variantsTable');
+      const rows = table.getElementsByTagName('tr');
+
+      for (let i = 1; i < rows.length; i++) {
+        const tdGene = rows[i].getElementsByTagName('td')[6];
+        const tdImpact = rows[i].getElementsByTagName('td')[5];
+
+        if (!tdGene || !tdImpact) {
+          rows[i].style.display = "none";
+          continue;
+        }
+
+        const geneText = tdGene.textContent.toLowerCase();
+        const impactText = tdImpact.textContent.toLowerCase();
+
+        const geneMatch = geneText.includes(geneInput);
+        const impactMatch = impactText.includes(impactInput);
+
+        rows[i].style.display = (geneMatch && impactMatch) ? "" : "none";
+      }
+    }
+  </script>
+
+  {% else %}
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label for="annotator">Select Annotator:</label>
+    <select id="annotator" name="annotator" required>
+      <option value="annovar" selected>ANNOVAR</option>
+      <option value="vep">VEP (Variant Effect Predictor)</option>
+      <option value="snpeff">SnpEff</option>
+      <option value="bcftools">BCFtools</option>
+    </select>
+
+    <label for="vcf_file">Upload VCF file:</label>
+    <input type="file" id="vcf_file" name="vcf_file" accept=".vcf" required />
+
+    <button type="submit">Annotate</button>
+  </form>
+  {% endif %}
+</body>
+</html>

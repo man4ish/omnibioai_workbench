@@ -1,0 +1,33 @@
+{% extends "literature_summarizer/base.html" %}
+
+{% block content %}
+<h2>Annotated Abstracts</h2>
+
+<form method="get" action="{% url 'literature_summarizer:pubtator_annotate' %}">
+  <input type="text" name="query" placeholder="Enter keyword(s)" value="{{ request.GET.query }}">
+  <button type="submit">Search</button>
+</form>
+
+{% if results %}
+  {% for r in results %}
+    <h3>{{ r.title }}</h3>
+    <p>{{ r.text|safe }}</p>
+    <hr>
+  {% endfor %}
+{% elif request.GET.query %}
+  <p>No abstracts found for your query.</p>
+{% else %}
+  <p>Please enter a keyword to search.</p>
+{% endif %}
+
+<style>
+  .gene { background-color: #D1F2EB; }
+  .disease { background-color: #FADBD8; }
+  .chemical { background-color: #FCF3CF; }
+  span.entity {
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-weight: bold;
+  }
+</style>
+{% endblock %}

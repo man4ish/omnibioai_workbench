@@ -1,0 +1,77 @@
+{% extends "single_cell_analysis/base.html" %}
+
+{% block content %}
+<style>
+  .container {
+    max-width: 900px;
+    margin: 40px auto;
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  h2 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 25px;
+  }
+  label {
+    font-weight: 600;
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    color: #34495e;
+  }
+  input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 20px;
+  }
+  button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    font-size: 1em;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  button:hover {
+    background-color: #2980b9;
+  }
+  .message {
+    color: red;
+    margin-top: 10px;
+    text-align: center;
+  }
+</style>
+
+<div class="container">
+  <h2>Upload .h5ad File</h2>
+
+  <form method="POST" enctype="multipart/form-data"
+        action="{% url 'single_cell_analysis:upload_h5ad' %}">
+    {% csrf_token %}
+
+    <label for="{{ form.file.id_for_label }}">{{ form.file.label }}</label>
+    {{ form.file }}  
+    {% if form.file.errors %}
+      <div class="message">{{ form.file.errors|striptags }}</div>
+    {% endif %}
+
+    <button type="submit">Upload and View Plot</button>
+  </form>
+
+  {% if messages %}
+    {% for msg in messages %}
+      <div class="message">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

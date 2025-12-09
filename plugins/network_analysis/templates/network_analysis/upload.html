@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Interaction Network</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f8f9fa;
+    }
+
+    h2 {
+      color: #343a40;
+    }
+
+    form {
+      background-color: #ffffff;
+      padding: 20px;
+      border: 1px solid #ced4da;
+      border-radius: 8px;
+      max-width: 500px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    form p {
+      margin-bottom: 15px;
+    }
+
+    input[type="file"] {
+      width: 100%;
+      padding: 8px;
+    }
+
+    button[type="submit"] {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Upload Interaction Network</h2>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload & Visualize</button>
+  </form>
+
+</body>
+</html>

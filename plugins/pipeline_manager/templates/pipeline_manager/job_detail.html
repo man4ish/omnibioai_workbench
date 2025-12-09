@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Job {{ job.id }}</title>
+</head>
+<body>
+    <h1>Job {{ job.id }}</h1>
+    <p>Status: {{ job.status }}</p>
+    <pre>{{ job.log }}</pre>
+    <a href="{% url 'pipeline_manager:pipeline_home' %}">← Back to Pipeline Home</a>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+    "name": "Variant Annotation",
+    "slug": "variant_annotation",
+    "version": "1.0",
+    "description": "Plugin to annotate genomic variants",
+    "author": "Manish Kumar",
+    "entry_point": "variant_annotation.urls",
+    "menu": {
+        "label": "Variant Annotation",
+        "icon": "fa-dna"
+    }
+}

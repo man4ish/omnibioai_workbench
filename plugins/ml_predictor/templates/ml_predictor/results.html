@@ -1,0 +1,56 @@
+<!-- ml_predictor/templates/ml_predictor/results.html -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prediction Results</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+            margin: 20px auto;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: center;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        caption {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align:center;">Prediction Results</h1>
+    {% if predictions %}
+        <table>
+            <caption>Demo RNA-Seq classification done!</caption>
+            <thead>
+                <tr>
+                    <th>Sample Index</th>
+                    <th>Prediction</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, pred in predictions %}
+                <tr>
+                    <td>{{ index }}</td>
+                    <td>{{ pred }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="text-align:center;">{{ message }}</p>
+    {% endif %}
+    <div style="text-align:center; margin-top: 20px;">
+        <a href="{% url 'ml_predictor:ml_predictor_upload' %}" class="btn btn-secondary mt-3">Back to Upload</a>
+    </div>
+</body>
+</html>
+
+
