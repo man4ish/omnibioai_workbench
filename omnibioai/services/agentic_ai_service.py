@@ -6,89 +6,123 @@ from typing import List, Dict
 import os
 from .logger_service import logger
 from .rag_service import RAGService
-from .llm_service import LLMService
 from .experiment_tracking_service import ExperimentTrackingService
 from .model_zoo_service import ModelZooService
+
+# LangChain & Ollama imports
+from langchain.chat_models import ChatOllama
+from langchain.schema import HumanMessage
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+
+# LangGraph imports
+from langgraph import Node, Graph
 
 
 class AgenticAIService:
     """
     Agentic AI Service: Provides intelligent recommendations for analysis, 
     experiment planning, gene/pathway exploration, and literature suggestions.
-    Integrates with RAG, LLMs, Experiment Tracking, and Model Zoo.
+    Integrates with RAG, LLMs, Experiment Tracking, Model Zoo, LangChain, and LangGraph.
     """
 
     def __init__(self):
+        # Core services
         self.rag = RAGService()
-        self.llm = LLMService()
         self.experiment_tracker = ExperimentTrackingService()
         self.model_zoo = ModelZooService()
 
+        # Ollama LLM via LangChain
+        self.llm = ChatOllama(model="deepseek-r1")  
+
+        # LangChain prompt template for analysis suggestions
+        self.analysis_prompt = PromptTemplate(
+            input_variables=["metadata", "plugin_outputs", "candidate_steps"],
+            template=(
+                "Dataset metadata: {metadata}\n"
+                "Current plugin outputs: {plugin_outputs}\n"
+                "Candidate next steps: {candidate_steps}\n"
+                "Suggest which analyses to run next and why."
+            )
+        )
+        self.analysis_chain = LLMChain(llm=self.llm, prompt=self.analysis_prompt)
+
+        # LangGraph for plugin dependency management
+        self.plugin_graph = Graph()
+        self._init_plugin_graph()
+
+    def _init_plugin_graph(self):
+        """Initialize LangGraph with plugin dependencies."""
+        clustering = Node("Clustering")
+        pathway = Node("Pathway Enrichment")
+        gene_annotation = Node("Gene Annotation")
+        variant_annotation = Node("Variant Annotation")
+        network_analysis = Node("Network Analysis")
+        ml_predictor = Node("ML Predictor")
+
+        # Example dependencies
+        self.plugin_graph.add_node(clustering)
+        self.plugin_graph.add_node(pathway)
+        self.plugin_graph.add_node(gene_annotation)
+        self.plugin_graph.add_node(variant_annotation)
+        self.plugin_graph.add_node(network_analysis)
+        self.plugin_graph.add_node(ml_predictor)
+
+        self.plugin_graph.add_edge(clustering, pathway)  # pathway after clustering
+        self.plugin_graph.add_edge(gene_annotation, pathway)  # pathway needs gene annotation
+
     async def suggest_next_analysis(self, dataset_metadata: Dict, plugin_outputs: List[str]) -> List[str]:
         """
-        Suggest next analysis steps based on dataset type and plugin outputs.
-        Combines rule-based suggestions with LLM-refined suggestions.
+        Suggest next analysis steps using:
+        1) LangGraph dependency management (rule-based)
+        2) LLM refinement via LangChain + Ollama
         """
-        suggestions = []
-        data_type = dataset_metadata.get("type", "").lower()
+        # ----- Step 1: LangGraph candidate steps -----
+        candidate_steps = self.plugin_graph.get_ready_nodes(completed=plugin_outputs)
+        logger.info(f"[AgenticAI] Candidate steps from graph: {candidate_steps}")
 
-        # ----- Step 1: Rule-based suggestions -----
-        if data_type == "single_cell":
-            if "clustering" not in plugin_outputs:
-                suggestions.append("Run clustering plugin")
-            if "pathway_enrichment" not in plugin_outputs:
-                suggestions.append("Run pathway enrichment plugin")
-            if "gene_annotation" not in plugin_outputs:
-                suggestions.append("Run gene annotation plugin")
+        if not candidate_steps:
+            return []
 
-        elif data_type == "variant":
-            if "variant_annotation" not in plugin_outputs:
-                suggestions.append("Run variant annotation plugin")
-            if "network_analysis" not in plugin_outputs:
-                suggestions.append("Run network analysis plugin")
+        # ----- Step 2: LLM refinement -----
+        llm_input = {
+            "metadata": dataset_metadata,
+            "plugin_outputs": plugin_outputs,
+            "candidate_steps": candidate_steps
+        }
+        refined_suggestions = await self.analysis_chain.arun(llm_input)
+        # Split into list if returned as comma-separated string
+        if isinstance(refined_suggestions, str):
+            refined_suggestions = [s.strip() for s in refined_suggestions.split(",")]
 
-        elif data_type == "multi_omics":
-            suggestions.append("Run ML predictor plugin")
-            suggestions.append("Run pathway enrichment plugin")
+        # Remove duplicates and log
+        suggestions = list(dict.fromkeys(candidate_steps + refined_suggestions))
+        logger.info(f"[AgenticAI] Combined suggestions (LangGraph + LLM): {suggestions}")
 
-        # ----- Step 2: LLM augmentation -----
-        # Provide dataset info and rule-based suggestions to LLM for refinement
-        llm_input = f"""
-        Dataset metadata: {dataset_metadata}
-        Current plugin outputs: {plugin_outputs}
-        Initial suggestions: {suggestions}
-        Suggest additional or better analyses for this dataset.
-        """
-        llm_suggestions = await self.llm.generate_async(llm_input)
-        
-        # Merge LLM suggestions with rules, avoid duplicates
-        combined_suggestions = list(dict.fromkeys(suggestions + llm_suggestions))
-        logger.info(f"[AgenticAI] Combined rule + LLM suggestions: {combined_suggestions}")
-        
-        return combined_suggestions
- 
+        return suggestions
 
     async def suggest_genes_or_pathways(self, query: str) -> List[str]:
         """
-        Suggest relevant genes or pathways using LLM + RAG.
+        Suggest relevant genes or pathways using RAG + LLM.
         """
         abstracts = await self.rag.retrieve_async(query)
-        summary = await self.llm.summarize_async(abstracts)
+        summary = await self.llm.generate_async(
+            f"Summarize these abstracts and extract relevant genes or pathways:\n{abstracts}"
+        )
         suggestions = self.extract_genes_pathways(summary)
         logger.info(f"[AgenticAI] Genes/Pathways suggestions for '{query}': {suggestions}")
         return suggestions
 
     def extract_genes_pathways(self, summary_text: str) -> List[str]:
         """
-        Extract genes or pathways from LLM summary using NLP/entity recognition.
-        Placeholder: Replace with BioBERT or regex-based extraction.
+        Extract genes or pathways from LLM summary.
+        Placeholder: replace with BioBERT/NLP in production.
         """
-        # Example static extraction (replace with NLP model in production)
         return ["GeneA", "GeneB", "PathwayX"]
 
     async def suggest_literature(self, query: str, top_k: int = 5) -> List[Dict]:
         """
-        Retrieve top relevant PubMed abstracts or papers.
+        Retrieve top relevant literature using RAG.
         """
         abstracts = await self.rag.retrieve_async(query, top_k=top_k)
         logger.info(f"[AgenticAI] Top {top_k} literature suggestions for '{query}' retrieved")
@@ -97,8 +131,7 @@ class AgenticAIService:
     @lru_cache(maxsize=128)
     def get_model_recommendations(self, task_type: str) -> List[str]:
         """
-        Recommend pre-trained models from Model Zoo for a given task.
-        Caching improves response time for repeated queries.
+        Recommend pre-trained models from Model Zoo.
         """
         models = self.model_zoo.list_models(task_type)
         logger.info(f"[AgenticAI] Model recommendations for '{task_type}': {models}")
@@ -107,7 +140,6 @@ class AgenticAIService:
     async def suggest_pipeline(self, dataset_metadata: Dict, plugin_outputs: List[str], query: str = "") -> Dict:
         """
         Aggregate suggestions for analyses, genes/pathways, literature, and model recommendations.
-        Returns a structured dictionary.
         """
         analyses = await self.suggest_next_analysis(dataset_metadata, plugin_outputs)
         genes_pathways = await self.suggest_genes_or_pathways(query) if query else []
@@ -121,7 +153,6 @@ class AgenticAIService:
             "models": models
         }
 
-        # Track suggestions in Experiment Tracking
+        # Log suggestions
         self.experiment_tracker.log_agentic_ai_suggestions(dataset_metadata, suggestion_package)
         return suggestion_package
-
