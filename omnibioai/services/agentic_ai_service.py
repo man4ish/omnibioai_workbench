@@ -27,12 +27,12 @@ class AgenticAIService:
     async def suggest_next_analysis(self, dataset_metadata: Dict, plugin_outputs: List[str]) -> List[str]:
         """
         Suggest next analysis steps based on dataset type and plugin outputs.
-        Returns a list of recommended plugin names.
+        Combines rule-based suggestions with LLM-refined suggestions.
         """
         suggestions = []
         data_type = dataset_metadata.get("type", "").lower()
 
-        # Rule-based suggestions
+        # ----- Step 1: Rule-based suggestions -----
         if data_type == "single_cell":
             if "clustering" not in plugin_outputs:
                 suggestions.append("Run clustering plugin")
@@ -51,8 +51,22 @@ class AgenticAIService:
             suggestions.append("Run ML predictor plugin")
             suggestions.append("Run pathway enrichment plugin")
 
-        logger.info(f"[AgenticAI] Suggested analyses: {suggestions}")
-        return suggestions
+        # ----- Step 2: LLM augmentation -----
+        # Provide dataset info and rule-based suggestions to LLM for refinement
+        llm_input = f"""
+        Dataset metadata: {dataset_metadata}
+        Current plugin outputs: {plugin_outputs}
+        Initial suggestions: {suggestions}
+        Suggest additional or better analyses for this dataset.
+        """
+        llm_suggestions = await self.llm.generate_async(llm_input)
+        
+        # Merge LLM suggestions with rules, avoid duplicates
+        combined_suggestions = list(dict.fromkeys(suggestions + llm_suggestions))
+        logger.info(f"[AgenticAI] Combined rule + LLM suggestions: {combined_suggestions}")
+        
+        return combined_suggestions
+ 
 
     async def suggest_genes_or_pathways(self, query: str) -> List[str]:
         """
