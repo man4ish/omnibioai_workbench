@@ -1,6 +1,11 @@
 # OmniBioAI
 
-A modular, **plugin-based Django bioinformatics workbench** that integrates tools for genomic data visualization, machine learning prediction, variant annotation, pathway enrichment analysis, literature mining, single-cell analysis, and network analysis.
+A modular, **AI-powered, plugin-based Django bioinformatics workbench** that integrates tools for genomic data visualization, machine learning prediction, variant annotation, pathway enrichment analysis, literature mining, single-cell analysis, and network analysis.
+
+It features **LLM and RAG-based AI assistance** to provide insights, explanations, and intelligent querying of genomic data.
+
+Additionally, a **Tutorials section** includes script-based example workflows and projects, helping users learn applied AI, ML, and bioinformatics techniques step by step.
+
 
 ---
 
