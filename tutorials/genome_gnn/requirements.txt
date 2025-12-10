@@ -1,0 +1,26 @@
+torch-geometric==2.6.1
+
+# Machine Learning / AI
+torch-scatter==2.3.0
+torch-sparse==0.6.19
+torch-geometric==2.3.0
+torch-cluster==1.6.0
+torch-spline-conv==1.2.1
+pytorch-lightning>=2.0
+
+# Bioinformatics / Data
+biopython
+scanpy
+anndata
+pandas-profiling
+
+# Visualization
+plotly
+matplotlib
+seaborn
+holoviews
+bokeh
+
+# Other utilities
+networkx
+scikit-image
