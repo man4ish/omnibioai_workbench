@@ -1,0 +1,34 @@
+# Python/Django
+*.pyc
+__pycache__/
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+.python-version
+
+# Django
+*.log
+local_settings.py
+*.sqlite3-journal
+
+# Media and static files
+
+# Virtual environment
+venv/
+env/
+new_venv/
+.venv/
+*.venv/
+
+# IDE and editor files
+.idea/
+*.sublime-project
+*.sublime-workspace
+.vscode/
+*.swp
+*.swo
+
+# macOS
+.DS_Store
+

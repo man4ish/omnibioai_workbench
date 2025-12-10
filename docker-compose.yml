@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  ollama:
+    build:
+      context: ./ollama-server
+      dockerfile: Dockerfile
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    restart: unless-stopped
+
+  webapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - ollama
+    environment:
+      - OLLAMA_ENDPOINT=http://ollama:11434/api/generate
+    command: ["./wait-for-ollama.sh", "ollama", "11434", "--", "gunicorn", "visualization_workbench.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+
+volumes:
+  ollama_data:
