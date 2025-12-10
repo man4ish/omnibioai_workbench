@@ -4,31 +4,80 @@ A modular, **plugin-based Django bioinformatics workbench** that integrates tool
 
 ---
 
+## Architecture
+
+Here is the architecture of OmniBioAI Workbench:
+
+![OmniBioAI Architecture](static/figures/Architecture_.png)
+
 ## Project Structure
 
 ```
-omnibioai_project/
-├── manage.py                    # Django management script
-├── db.sqlite3                   # SQLite DB for development
-├── start_app.sh                 # Shell script to run the app
-├── data/                        # Input/output data directory
-├── plugins/                     # All plugin-based apps
-│   ├── home/                    # Landing page plugin
-│   ├── igv_viewer/              # Genomic viewer integration (IGV)
-│   ├── pipeline_manager/        # Workflow management plugin
-│   ├── ml_predictor/            # Machine learning prediction plugin
-│   ├── variant_annotation/      # Variant annotation plugin
-│   ├── pathway_enrichment/      # Pathway enrichment & GSEA plugin
-│   ├── network_analysis/        # Keyword co-occurrence network visualization plugin
-│   ├── literature_summarizer/   # Literature mining & summarization plugin
-│   ├── single_cell_analysis/    # Single-cell RNA-seq processing & visualization
-│   ├── gene_annotation/         # Functional gene and variant annotation plugin
-├── omnibioai/                   # Main Django project configuration
+omnibioai_workbench/
+├── manage.py                     # Django management script
+├── main_demo.py                  # Standalone demo to test core services
+├── db.sqlite3                    # SQLite DB (dev)
+├── README.md                     # Project overview & contribution guide
+├── requirements.txt
+├── Dockerfile
+├── start_app.sh
+
+├── data/                         # Centralized data storage
+│   ├── uploads/                  # Uploaded user files (VCF, H5, CSV, etc.)
+│   ├── results/                  # Analysis outputs
+│   ├── reports/                  # Generated PDF/PNG/HTML reports
+│   └── logs/                     # Runtime logs
+
+├── static/                       # Static assets (CSS, JS, images)
+
+├── plugins/                      # Plugin-based Django apps (feature modules)
+│   ├── home/                     # Landing & dashboard plugin
+│   ├── igv_viewer/               # IGV genomic visualization
+│   ├── pipeline_manager/         # Workflow & pipeline orchestration
+│   ├── ml_predictor/             # ML/DL prediction models
+│   ├── variant_annotation/       # Variant annotation (VCF-based)
+│   ├── pathway_enrichment/       # GSEA / pathway analysis
+│   ├── network_analysis/         # Network & graph analysis plugin
+│   ├── literature_summarizer/    # PubMed mining & summarization
+│   ├── single_cell_analysis/     # scRNA-seq analysis & visualization
+│   ├── gene_annotation/          # Gene & functional annotation
+│   └── plugin_template/          # Reference template for contributors
+
+├── omnibioai/                    # Core Django project
+│   ├── __init__.py
 │   ├── settings.py
 │   ├── urls.py
-│   └── ...
-├── requirements.txt
-└── Dockerfile
+│   ├── asgi.py
+│   ├── wsgi.py
+
+│   ├── core/                     # ✅ Core platform layer (framework-agnostic)
+│   │   ├── __init__.py
+│   │   ├── config.py             # Global configuration & env variables
+│   │   ├── exceptions.py         # Custom exception hierarchy
+│   │   └── constants.py          # Shared constants
+
+│   ├── services/                 # ✅ Reusable core services
+│   │   ├── __init__.py
+│   │   ├── upload_service.py     # File upload & validation (VCF, H5, etc.)
+│   │   ├── logger_service.py     # Centralized logging
+│   │   ├── rag_service.py        # RAG orchestration (ragbio integration)
+│   │   ├── llm_service.py        # Ollama LLM service (LLaMA3 / DeepSeek)
+│   │   ├── reporting_service.py  # Tables, plots, PDF/PNG generation
+│   │   ├── network_viz.py        # Network graph generation (PyVis/NetworkX)
+│   │   ├── auth_service.py       # Authentication & JWT/OAuth hooks
+│   │   ├── user_models.py        # User & role abstractions
+│   │   └── permissions.py        # RBAC / permission rules
+
+│   ├── integrations/             # External systems
+│   │   ├── ragbio/               # ✅ Your RAG-powered gene discovery package
+│   │   ├── neo4j/                # Knowledge graph integration
+│   │   └── igv/                  # IGV & genome browser hooks
+
+│   └── utils/                    # Shared utilities
+│       ├── validators.py         # Input validation (VCF/H5/CSV)
+│       ├── file_utils.py
+│       └── date_utils.py
+
 ```
 
 ---
@@ -169,7 +218,3 @@ minikube service ollama-service -n omnibioai
 ```
 
 ---
-
-![Screenshot](./screenshots/homepage.png)
-
-
