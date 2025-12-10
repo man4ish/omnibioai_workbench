@@ -1,0 +1,3 @@
+##fileformat=VCF
+#CHROM	POS	ID
+chr1	123	.
