@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'widget_tweaks',
-    'plugins.igv_viewer',  # Add this line
     'plugins.pipeline_manager.apps.PipelineManagerConfig',
     'plugins.gene_annotation.apps.GeneAnnotationConfig',
     'plugins.home.apps.HomeConfig',

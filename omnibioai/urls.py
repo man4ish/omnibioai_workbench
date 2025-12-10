@@ -21,7 +21,6 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('plugins/igv_viewer/', include('plugins.igv_viewer.urls')),  # <-- add this
     path('plugins/pipeline_manager/', include('plugins.pipeline_manager.urls')),  # add this
     path('plugins/gene_annotation/', include('plugins.gene_annotation.urls')),
     path('plugins/ml_predictor/', include('plugins.ml_predictor.urls')),
