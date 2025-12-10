@@ -155,7 +155,7 @@
     <div class="tab" data-category="ml">ML</div>
     <div class="tab" data-category="genomics">Genomics</div>
     <div class="tab" data-category="network">Network</div>
-    <div class="tab" data-category="rag">RAG/LLM</div>
+    <div class="tab" data-category="tutorial">Tutorial</div>
 </div>
 
 <div class="dashboard-grid" id="appGrid">
@@ -179,10 +179,6 @@
         <a href="{% url 'pathway_enrichment:upload' %}">Pathway Enrichment</a>
         <p>Identify enriched biological pathways with AI.</p>
     </div>
-    <div class="app-card" data-category="rag">
-        <a href="{% url 'literature_summarizer:literature_summary' %}">LLM Literature Summarizer</a>
-        <p>Summarize scientific papers with LLMs and RAG.</p>
-    </div>
     <div class="app-card" data-category="network">
         <a href="{% url 'network_analysis:upload_network' %}">Network Analysis</a>
         <p>Explore biological networks with AI-driven insights.</p>
@@ -190,6 +186,10 @@
     <div class="app-card" data-category="genomics">
         <a href="{% url 'single_cell_analysis:upload_h5ad' %}">Single Cell Analysis</a>
         <p>Analyze single-cell RNA-seq data with AI-enhanced plots.</p>
+    </div>
+    <div class="app-card" data-category="tutorial">
+        <a href="/tutorials/README.md" target="_blank">OmniBioAI Tutorial</a>
+        <p>Learn how to use OmniBioAI with step-by-step guidance.</p>
     </div>
 </div>
 

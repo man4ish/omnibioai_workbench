@@ -37,7 +37,6 @@ omnibioai_workbench/
 
 ├── plugins/                      # Plugin-based Django apps (feature modules)
 │   ├── home/                     # Landing & dashboard plugin
-│   ├── igv_viewer/               # IGV genomic visualization
 │   ├── pipeline_manager/         # Workflow & pipeline orchestration
 │   ├── ml_predictor/             # ML/DL prediction models
 │   ├── variant_annotation/       # Variant annotation (VCF-based)
@@ -63,6 +62,7 @@ omnibioai_workbench/
 
 │   ├── services/                 # ✅ Reusable core services
 │   │   ├── __init__.py
+│   │   ├── igv_service           # IGV genome browser service (usable anywhere)
 │   │   ├── upload_service.py     # File upload & validation (VCF, H5, etc.)
 │   │   ├── logger_service.py     # Centralized logging
 │   │   ├── rag_service.py        # RAG orchestration (ragbio integration)

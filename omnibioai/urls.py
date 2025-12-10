@@ -16,8 +16,11 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from django.views.static import serve
+from django.conf import settings
 from django.views.generic import RedirectView
+import os
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,6 +32,10 @@ urlpatterns = [
     path('plugins/literature_summarizer/', include('plugins.literature_summarizer.urls')),
     path('plugins/network_analysis/', include('plugins.network_analysis.urls')),
     path('plugins/single_cell_analysis/', include('plugins.single_cell_analysis.urls')),
-
+    # Serve tutorials (pointing to README.md or any file inside tutorials)
+    # Corrected: use 'path' instead of 'filename'
+    re_path(r'^tutorials/(?P<path>.+)$', serve, {
+        'document_root': os.path.join(settings.BASE_DIR, 'tutorials'),
+    }),
     path('', include('plugins.home.urls')),   # root path
 ]
