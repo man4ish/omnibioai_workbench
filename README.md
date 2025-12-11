@@ -2,10 +2,9 @@
 
 A modular, **AI-powered, plugin-based Django bioinformatics workbench** that integrates tools for genomic data visualization, machine learning prediction, variant annotation, pathway enrichment analysis, literature mining, single-cell analysis, and network analysis.
 
-It features **LLM and RAG-based AI assistance** to provide insights, explanations, and intelligent querying of genomic data.
+It features **LLM and RAG-based AI assistance** to provide insights, explanations, and intelligent querying of genomic data, and **Agentic AI capabilities** that enable the system to autonomously perform tasks, make workflow decisions, and adapt analyses based on data context.
 
-Additionally, a **Tutorials section** includes script-based example workflows and projects, helping users learn applied AI, ML, and bioinformatics techniques step by step.
-
+Additionally, a **Tutorials section** includes script-based example workflows and projects, helping users learn applied AI, ML, and bioinformatics techniques step by step, while exploring the power of autonomous, agent-driven genomic analysis.
 
 ---
 
