@@ -12,6 +12,7 @@ from .model_zoo_service import ModelZooService
 # LangChain & Ollama imports
 from langchain.chat_models import ChatOllama
 from langchain.schema import HumanMessage
+from langchain.agents import Tool, initialize_agent, AgentType
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 
@@ -21,9 +22,8 @@ from langgraph import Node, Graph
 
 class AgenticAIService:
     """
-    Agentic AI Service: Provides intelligent recommendations for analysis, 
-    experiment planning, gene/pathway exploration, and literature suggestions.
-    Integrates with RAG, LLMs, Experiment Tracking, Model Zoo, LangChain, and LangGraph.
+    Agentic AI Service with fully asynchronous LangChain agent for
+    dynamic, step-by-step experiment planning.
     """
 
     def __init__(self):
@@ -35,21 +35,36 @@ class AgenticAIService:
         # Ollama LLM via LangChain
         self.llm = ChatOllama(model="deepseek-r1")  
 
-        # LangChain prompt template for analysis suggestions
-        self.analysis_prompt = PromptTemplate(
-            input_variables=["metadata", "plugin_outputs", "candidate_steps"],
-            template=(
-                "Dataset metadata: {metadata}\n"
-                "Current plugin outputs: {plugin_outputs}\n"
-                "Candidate next steps: {candidate_steps}\n"
-                "Suggest which analyses to run next and why."
-            )
-        )
-        self.analysis_chain = LLMChain(llm=self.llm, prompt=self.analysis_prompt)
-
         # LangGraph for plugin dependency management
         self.plugin_graph = Graph()
         self._init_plugin_graph()
+
+        # Setup tools for LangChain agent
+        self.tools = [
+            Tool(
+                name="Suggest Analysis",
+                func=self._agent_suggest_analysis,
+                description="Suggests the next analysis steps based on current plugin outputs and dataset type"
+            ),
+            Tool(
+                name="Suggest Genes/Pathways",
+                func=self._agent_suggest_genes_pathways,
+                description="Suggests relevant genes or pathways for a given query"
+            ),
+            Tool(
+                name="Suggest Literature",
+                func=self._agent_suggest_literature,
+                description="Retrieves relevant PubMed abstracts or papers"
+            )
+        ]
+
+        # Initialize LangChain agent (asynchronous)
+        self.agent = initialize_agent(
+            tools=self.tools,
+            llm=self.llm,
+            agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
+            verbose=True
+        )
 
     def _init_plugin_graph(self):
         """Initialize LangGraph with plugin dependencies."""
@@ -60,99 +75,75 @@ class AgenticAIService:
         network_analysis = Node("Network Analysis")
         ml_predictor = Node("ML Predictor")
 
-        # Example dependencies
-        self.plugin_graph.add_node(clustering)
-        self.plugin_graph.add_node(pathway)
-        self.plugin_graph.add_node(gene_annotation)
-        self.plugin_graph.add_node(variant_annotation)
-        self.plugin_graph.add_node(network_analysis)
-        self.plugin_graph.add_node(ml_predictor)
+        self.plugin_graph.add_nodes([clustering, pathway, gene_annotation,
+                                     variant_annotation, network_analysis, ml_predictor])
 
-        self.plugin_graph.add_edge(clustering, pathway)  # pathway after clustering
-        self.plugin_graph.add_edge(gene_annotation, pathway)  # pathway needs gene annotation
+        self.plugin_graph.add_edge(clustering, pathway)
+        self.plugin_graph.add_edge(gene_annotation, pathway)
 
-    async def suggest_next_analysis(self, dataset_metadata: Dict, plugin_outputs: List[str]) -> List[str]:
+    # ----- Tools for LangChain agent -----
+    async def _agent_suggest_analysis(self, input_text: str) -> str:
         """
-        Suggest next analysis steps using:
-        1) LangGraph dependency management (rule-based)
-        2) LLM refinement via LangChain + Ollama
+        Tool for LangChain agent to suggest next plugin steps.
+        Expects input_text as JSON-like string with dataset metadata & plugin outputs.
         """
-        # ----- Step 1: LangGraph candidate steps -----
+        import json
+        try:
+            info = json.loads(input_text)
+            dataset_metadata = info.get("metadata", {})
+            plugin_outputs = info.get("plugin_outputs", [])
+        except Exception as e:
+            return f"Error parsing input: {e}"
+
         candidate_steps = self.plugin_graph.get_ready_nodes(completed=plugin_outputs)
-        logger.info(f"[AgenticAI] Candidate steps from graph: {candidate_steps}")
+        return ", ".join(candidate_steps) if candidate_steps else "No further steps available"
 
-        if not candidate_steps:
-            return []
+    async def _agent_suggest_genes_pathways(self, query: str) -> str:
+        genes = await self.suggest_genes_or_pathways(query)
+        return ", ".join(genes)
 
-        # ----- Step 2: LLM refinement -----
-        llm_input = {
-            "metadata": dataset_metadata,
-            "plugin_outputs": plugin_outputs,
-            "candidate_steps": candidate_steps
-        }
-        refined_suggestions = await self.analysis_chain.arun(llm_input)
-        # Split into list if returned as comma-separated string
-        if isinstance(refined_suggestions, str):
-            refined_suggestions = [s.strip() for s in refined_suggestions.split(",")]
+    async def _agent_suggest_literature(self, query: str) -> str:
+        abstracts = await self.suggest_literature(query, top_k=5)
+        titles = [a.get("title", "No title") for a in abstracts]
+        return ", ".join(titles)
 
-        # Remove duplicates and log
-        suggestions = list(dict.fromkeys(candidate_steps + refined_suggestions))
-        logger.info(f"[AgenticAI] Combined suggestions (LangGraph + LLM): {suggestions}")
-
-        return suggestions
-
+    # ----- Existing methods -----
     async def suggest_genes_or_pathways(self, query: str) -> List[str]:
-        """
-        Suggest relevant genes or pathways using RAG + LLM.
-        """
         abstracts = await self.rag.retrieve_async(query)
         summary = await self.llm.generate_async(
             f"Summarize these abstracts and extract relevant genes or pathways:\n{abstracts}"
         )
-        suggestions = self.extract_genes_pathways(summary)
-        logger.info(f"[AgenticAI] Genes/Pathways suggestions for '{query}': {suggestions}")
-        return suggestions
-
-    def extract_genes_pathways(self, summary_text: str) -> List[str]:
-        """
-        Extract genes or pathways from LLM summary.
-        Placeholder: replace with BioBERT/NLP in production.
-        """
-        return ["GeneA", "GeneB", "PathwayX"]
+        return ["GeneA", "GeneB", "PathwayX"]  # placeholder
 
     async def suggest_literature(self, query: str, top_k: int = 5) -> List[Dict]:
-        """
-        Retrieve top relevant literature using RAG.
-        """
-        abstracts = await self.rag.retrieve_async(query, top_k=top_k)
-        logger.info(f"[AgenticAI] Top {top_k} literature suggestions for '{query}' retrieved")
-        return abstracts
+        return await self.rag.retrieve_async(query, top_k=top_k)
 
     @lru_cache(maxsize=128)
     def get_model_recommendations(self, task_type: str) -> List[str]:
-        """
-        Recommend pre-trained models from Model Zoo.
-        """
-        models = self.model_zoo.list_models(task_type)
-        logger.info(f"[AgenticAI] Model recommendations for '{task_type}': {models}")
-        return models
+        return self.model_zoo.list_models(task_type)
 
-    async def suggest_pipeline(self, dataset_metadata: Dict, plugin_outputs: List[str], query: str = "") -> Dict:
+    # ----- Agent-driven pipeline -----
+    async def run_agentic_pipeline(self, dataset_metadata: Dict, plugin_outputs: List[str], query: str = "") -> Dict:
         """
-        Aggregate suggestions for analyses, genes/pathways, literature, and model recommendations.
+        Run the LangChain agent to dynamically plan next steps.
         """
-        analyses = await self.suggest_next_analysis(dataset_metadata, plugin_outputs)
-        genes_pathways = await self.suggest_genes_or_pathways(query) if query else []
-        literature = await self.suggest_literature(query) if query else []
-        models = self.get_model_recommendations(dataset_metadata.get("task_type", "general"))
-
-        suggestion_package = {
-            "analyses": analyses,
-            "genes_pathways": genes_pathways,
-            "literature": literature,
-            "models": models
+        input_prompt = {
+            "metadata": dataset_metadata,
+            "plugin_outputs": plugin_outputs,
+            "query": query
         }
 
-        # Log suggestions
+        # Run agent asynchronously
+        agent_response = await self.agent.arun(input_prompt)
+
+        # Log agent response
+        logger.info(f"[AgenticAI Agent] Response: {agent_response}")
+
+        # Return structured result
+        suggestion_package = {
+            "agent_response": agent_response,
+            "models": self.get_model_recommendations(dataset_metadata.get("task_type", "general"))
+        }
+
         self.experiment_tracker.log_agentic_ai_suggestions(dataset_metadata, suggestion_package)
         return suggestion_package
