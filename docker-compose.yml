@@ -1,6 +1,9 @@
 version: '3.8'
 
 services:
+  # -----------------------------
+  # Ollama LLM server
+  # -----------------------------
   ollama:
     build:
       context: ./ollama-server
@@ -10,7 +13,48 @@ services:
     volumes:
       - ollama_data:/root/.ollama
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434/health"]
+      interval: 10s
+      retries: 5
 
+  # -----------------------------
+  # PostgreSQL database for Django
+  # -----------------------------
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: omnibioai
+      POSTGRES_PASSWORD: secretpassword
+      POSTGRES_DB: omnibioai
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER}"]
+      interval: 10s
+      retries: 5
+
+  # -----------------------------
+  # Optional Redis cache
+  # -----------------------------
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      retries: 5
+
+  # -----------------------------
+  # Django Webapp
+  # -----------------------------
   webapp:
     build:
       context: .
@@ -18,10 +62,35 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - ollama
+      ollama:
+        condition: service_healthy
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     environment:
-      - OLLAMA_ENDPOINT=http://ollama:11434/api/generate
-    command: ["./wait-for-ollama.sh", "ollama", "11434", "--", "gunicorn", "visualization_workbench.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+      DEBUG: '0'
+      SECRET_KEY: 'supersecretkey'
+      DATABASE_URL: postgres://omnibioai:secretpassword@db:5432/omnibioai
+      REDIS_URL: redis://redis:6379
+      OLLAMA_ENDPOINT: http://ollama:11434/api/generate
+    volumes:
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+      - logs:/app/logs
+    command: ["./wait-for-service.sh", "ollama", "11434", "60", "--", \
+              "./wait-for-service.sh", "db", "5432", "60", "--", \
+              "./wait-for-service.sh", "redis", "6379", "60", "--", \
+              "gunicorn", "omnibioai.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+    restart: unless-stopped
 
+# -----------------------------
+# Volumes
+# -----------------------------
 volumes:
   ollama_data:
+  pgdata:
+  redis_data:
+  static_volume:
+  media_volume:
+  logs:
