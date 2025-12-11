@@ -62,19 +62,26 @@ omnibioai_workbench/
 
 │   ├── services/                 # ✅ Reusable core services
 │   │   ├── __init__.py
-│   │   ├── igv_service           # IGV genome browser service (usable anywhere)
-│   │   ├── upload_service.py     # File upload & validation (VCF, H5, etc.)
-│   │   ├── logger_service.py     # Centralized logging
-│   │   ├── rag_service.py        # RAG orchestration (ragbio integration)
-│   │   ├── llm_service.py        # Ollama LLM service (LLaMA3 / DeepSeek)
-│   │   ├── reporting_service.py  # Tables, plots, PDF/PNG generation
-│   │   ├── network_viz.py        # Network graph generation (PyVis/NetworkX)
-│   │   ├── auth_service.py       # Authentication & JWT/OAuth hooks
-│   │   ├── user_models.py        # User & role abstractions
-│   │   └── permissions.py        # RBAC / permission rules
+│   │   ├── agentic_ai_service.py        # Agentic AI orchestration & autonomous workflows
+│   │   ├── auth_service.py              # Authentication & JWT/OAuth hooks
+│   │   ├── experiment_tracking_service.py # ML/analysis experiment tracking
+│   │   ├── igv_service/                 # IGV genome browser service
+│   │   │   ├── __init__.py
+│   │   │   ├── igv_service.py           # Core IGV API integration
+│   │   │   ├── session_builder.py       # Session construction & configuration
+│   │   │   └── track_registry.py        # Track management & registry
+│   │   ├── llm_service.py               # LLM integration (Ollama, LLaMA3, DeepSeek)
+│   │   ├── logger_service.py            # Centralized logging & log formatting
+│   │   ├── model_zoo_service.py         # ML/DL model registry & loader
+│   │   ├── network_viz.py               # Network/graph visualizations (PyVis/NetworkX)
+│   │   ├── permissions.py               # RBAC & permission management
+│   │   ├── rag_service.py               # RAG orchestration (ragbio integration)
+│   │   ├── reporting_service.py         # Tables, plots, PDF/PNG report generation
+│   │   ├── upload_service.py            # File upload & validation (VCF, H5, CSV)
+│   │   └── user_models.py               # User & role abstractions
 
 │   ├── integrations/             # External systems
-│   │   ├── ragbio/               # ✅ Your RAG-powered gene discovery package
+│   │   ├── ragbio/               # ✅ RAG-powered gene discovery package
 │   │   ├── neo4j/                # Knowledge graph integration
 │   │   └── igv/                  # IGV & genome browser hooks
 
