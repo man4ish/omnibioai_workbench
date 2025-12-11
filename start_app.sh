@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-PORT=8000
+PORT=8001
 
 # Kill any process using the port
 PIDS=$(lsof -i :$PORT | awk 'NR != 1 {print $2}' | sort -u)
@@ -13,6 +13,13 @@ else
   echo "Done."
 fi
 
+# Start Ollama in the background
+echo "Starting Ollama..."
+ollama serve &
+
+# Give Ollama a few seconds to start
+sleep 5
+
 # Make migrations (detect changes and create migration files if needed)
 python3 manage.py makemigrations
 
@@ -20,4 +27,4 @@ python3 manage.py makemigrations
 python3 manage.py migrate
 
 # Start the Django development server
-python3 manage.py runserver
+python3 manage.py runserver $PORT
