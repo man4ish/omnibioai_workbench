@@ -16,7 +16,11 @@ def main():
     # Launch Snakemake workflow
     # ----------------------------
     snakefile = "workflows/Snakefile"
-    snakemake_task_id = pm.launch_snakemake(snakefile, work_dir="workflows/snake_workdir", config_file="workflows/config.yaml")
+    snakemake_task_id = pm.launch_snakemake(
+        snakefile, 
+        work_dir="workflows/snake_workdir", 
+        config_file="workflows/config.yaml"
+    )
     print(f"Snakemake workflow queued with task ID: {snakemake_task_id}")
 
     # ----------------------------
@@ -25,20 +29,32 @@ def main():
     wdl_file = "workflows/example.wdl"
     inputs_json = "workflows/inputs.json"
     options_json = "workflows/options.json"
-    wdl_task_id = pm.launch_wdl(wdl_file, inputs_json, options_json, work_dir="workflows/wdl_workdir")
+    wdl_task_id = pm.launch_wdl(
+        wdl_file, 
+        inputs_json, 
+        options_json, 
+        work_dir="workflows/wdl_workdir"
+    )
     print(f"WDL workflow queued with task ID: {wdl_task_id}")
 
     # ----------------------------
     # Poll pipeline statuses
     # ----------------------------
     task_ids = [nextflow_task_id, snakemake_task_id, wdl_task_id]
+    print("\nPolling workflow statuses. Ctrl+C to exit.\n")
+
     while task_ids:
         for task_id in task_ids[:]:
             status_info = pm.get_status(task_id)
-            print(f"Task {task_id} | Type: {pm.active_pipelines[task_id]['type']} | Status: {status_info['status']}")
-            if status_info['status'] in ["SUCCESS", "FAILURE", "REVOKED"]:
-                print(f"Result for task {task_id}: {status_info['result']}")
+            workflow_type = pm.active_pipelines.get(task_id, {}).get("type", "Unknown")
+            progress = status_info.get("progress", 0)
+            print(f"Task {task_id} | Type: {workflow_type} | Status: {status_info['status']} | Progress: {progress}%")
+
+            if status_info['status'] in ["SUCCESS", "FAILURE", "REVOKED", "completed", "failed"]:
+                result = status_info.get('result', '-')
+                print(f"Result for task {task_id}: {result}\n")
                 task_ids.remove(task_id)
+
         time.sleep(5)
 
 if __name__ == "__main__":

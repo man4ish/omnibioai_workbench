@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'widget_tweaks',
     "users",
+    "plugins.workflow_dashboard",
     'plugins.pipeline_manager.apps.PipelineManagerConfig',
     'plugins.gene_annotation.apps.GeneAnnotationConfig',
     'plugins.home.apps.HomeConfig',
@@ -51,6 +52,18 @@ INSTALLED_APPS = [
 
 
 ]
+
+INSTALLED_APPS += ["channels"]
+
+ASGI_APPLICATION = "omnibioai.asgi.application"
+
+# Redis channel layer
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [("redis", 6379)]},  # match your docker-compose redis service
+    }
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",

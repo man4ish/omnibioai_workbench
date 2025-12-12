@@ -1,0 +1,39 @@
+<h2>Workflow Dashboard</h2>
+<form method="post" enctype="multipart/form-data" action="{% url 'workflow_dashboard:launch_workflow' %}">
+    {% csrf_token %}
+    <label>Select Workflow:</label>
+    <select name="workflow_type">
+        <option value="nextflow">Nextflow</option>
+        <option value="snakemake">Snakemake</option>
+        <option value="wdl">WDL</option>
+    </select>
+    <label>Upload Script:</label>
+    <input type="file" name="script_file" required>
+    <button type="submit">Launch</button>
+</form>
+
+<h3>Active Jobs</h3>
+<table id="jobs-table">
+    <tr><th>Task ID</th><th>Type</th><th>Status</th><th>Logs</th></tr>
+    {% for job in jobs %}
+        <tr data-task="{{ job.task_id }}">
+            <td>{{ job.task_id }}</td>
+            <td>{{ job.workflow_type }}</td>
+            <td class="status">{{ job.status }}</td>
+            <td class="logs">{{ job.logs|default:"-" }}</td>
+        </tr>
+    {% endfor %}
+</table>
+
+<script>
+const ws = new WebSocket("ws://" + window.location.host + "/ws/workflows/");
+
+ws.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+    const row = document.querySelector(`tr[data-task='${data.task_id}']`);
+    if(row) {
+        row.querySelector(".status").innerText = data.status;
+        row.querySelector(".logs").innerText = data.logs || "-";
+    }
+};
+</script>
