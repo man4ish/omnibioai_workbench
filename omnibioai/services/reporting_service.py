@@ -6,8 +6,8 @@ from matplotlib.backends.backend_pdf import PdfPages
 from typing import List, Dict, Tuple
 from .logger_service import logger
 from .llm_service import LLMService
-from .network_viz import NetworkViz  # your network visualization helper
-from .igv_service import IGVService   # your IGV snapshot helper
+from .network_viz import NetworkViz
+from .igv_service import IGVService
 from omnibioai.core.config import REPORT_DIR
 
 
@@ -19,9 +19,6 @@ class ReportingService:
         self.network_viz = NetworkViz()
         self.igv_service = IGVService()
 
-    # ----------------------------
-    # Save JSON
-    # ----------------------------
     def save_json(self, data: Dict, filename="report.json") -> str:
         path = os.path.join(self.report_dir, filename)
         with open(path, "w") as f:
@@ -29,18 +26,12 @@ class ReportingService:
         logger.info(f"JSON report saved at {path}")
         return path
 
-    # ----------------------------
-    # Save CSV table
-    # ----------------------------
     def save_table(self, dataframe: pd.DataFrame, filename="report.csv") -> str:
         path = os.path.join(self.report_dir, filename)
         dataframe.to_csv(path, index=False)
         logger.info(f"CSV table saved at {path}")
         return path
 
-    # ----------------------------
-    # Create chart
-    # ----------------------------
     def create_chart(self, dataframe: pd.DataFrame, x_col, y_col, chart_type="bar", filename="chart.png") -> str:
         plt.figure(figsize=(8, 6))
         if chart_type == "bar":
@@ -58,9 +49,6 @@ class ReportingService:
         logger.info(f"Chart saved at {path}")
         return path
 
-    # ----------------------------
-    # Generate LLM summary
-    # ----------------------------
     async def generate_llm_summary(self, dataframe: pd.DataFrame, context: str = "") -> str:
         input_text = (
             f"Summarize the following dataset for a scientific report:\n"
@@ -70,27 +58,18 @@ class ReportingService:
         logger.info("LLM summary generated")
         return summary
 
-    # ----------------------------
-    # Generate network figure
-    # ----------------------------
     def generate_network_figure(self, network_data, filename="network.png") -> str:
         path = os.path.join(self.report_dir, filename)
         self.network_viz.plot_network(network_data, save_path=path)
         logger.info(f"Network visualization saved at {path}")
         return path
 
-    # ----------------------------
-    # Generate IGV snapshot
-    # ----------------------------
     def generate_igv_snapshot(self, igv_session, filename="igv_snapshot.png") -> str:
         path = os.path.join(self.report_dir, filename)
         self.igv_service.capture_snapshot(igv_session, path)
         logger.info(f"IGV snapshot saved at {path}")
         return path
 
-    # ----------------------------
-    # Save full PDF report
-    # ----------------------------
     def save_pdf(
         self,
         dataframe: pd.DataFrame,

@@ -5,6 +5,3 @@ ROLE_CHOICES = [("viewer", "Viewer"), ("tester", "Tester")]
 
 class OmniBioUser(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default="viewer")
-
-    class Meta:
-        app_label = "omnibioai"  # set this to the Django app name
