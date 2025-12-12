@@ -27,9 +27,21 @@ omnibioai_workbench/
 
 ├── data/                         # Centralized data storage
 │   ├── uploads/                  # Uploaded user files (VCF, H5, CSV, etc.)
-│   ├── results/                  # Analysis outputs
+│   ├── datasets/                 # Reference datasets for annotation & analysis
+│   │   ├── gnomAD/               # gnomAD datasets
+│   │   │   ├── v2.1.1/           # Version 2.1.1 files & metadata
+│   │   │   └── v3.1/             # Version 3.1 files & metadata
+│   │   ├── dbSNP/                # dbSNP datasets
+│   │   │   ├── build151/
+│   │   │   └── build152/
+│   │   ├── ClinVar/              # ClinVar datasets
+│   │   │   ├── 202312/
+│   │   │   └── 202401/
+│   │   └── custom_datasets/      # User-added reference datasets
+│   ├── results/                  # Analysis outputs (tables, CSV, JSON)
 │   ├── reports/                  # Generated PDF/PNG/HTML reports
 │   └── logs/                     # Runtime logs
+
 
 ├── static/                       # Static assets (CSS, JS, images)
 
@@ -70,6 +82,7 @@ omnibioai_workbench/
 │   │   │   └── track_registry.py        # Track management & registry
 │   │   ├── ml_service/                  # machine leanring service
 │   │   ├── visualization_service/       # visualization service
+│   │   ├── annotation_service/          # annotation service
 │   │   ├── llm_service.py               # LLM integration (Ollama, LLaMA3, DeepSeek)
 │   │   ├── logger_service.py            # Centralized logging & log formatting
 │   │   ├── model_zoo_service.py         # ML/DL model registry & loader
