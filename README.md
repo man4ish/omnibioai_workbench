@@ -21,15 +21,33 @@ omnibioai_workbench/
 ├── manage.py                     # Django management script
 ├── db.sqlite3                    # SQLite DB (dev)
 ├── README.md                     # Project overview & contribution guide
-├── requirements.txt
-├── Dockerfile
-├── start_app.sh
+├── requirements.txt              # Python dependencies
+├── docker/                       # Docker-related files
+│   ├── Dockerfile                # Main Dockerfile
+│   └── docker-compose.yml        # Compose scripts
+├── scripts/                      # Utility & setup scripts
+│   ├── start_app.sh              # Start the application
+│   └── wait-for-ollama.sh        # Wait-for-service helper script
+├── kubernetes/                   # Kubernetes manifests & Helm charts
+
 
 ├── data/                         # Centralized data storage
 │   ├── uploads/                  # Uploaded user files (VCF, H5, CSV, etc.)
-│   ├── results/                  # Analysis outputs
+│   ├── datasets/                 # Reference datasets for annotation & analysis
+│   │   ├── gnomAD/               # gnomAD datasets
+│   │   │   ├── v2.1.1/           # Version 2.1.1 files & metadata
+│   │   │   └── v3.1/             # Version 3.1 files & metadata
+│   │   ├── dbSNP/                # dbSNP datasets
+│   │   │   ├── build151/
+│   │   │   └── build152/
+│   │   ├── ClinVar/              # ClinVar datasets
+│   │   │   ├── 202312/
+│   │   │   └── 202401/
+│   │   └── custom_datasets/      # User-added reference datasets
+│   ├── results/                  # Analysis outputs (tables, CSV, JSON)
 │   ├── reports/                  # Generated PDF/PNG/HTML reports
 │   └── logs/                     # Runtime logs
+
 
 ├── static/                       # Static assets (CSS, JS, images)
 
@@ -68,6 +86,10 @@ omnibioai_workbench/
 │   │   │   ├── igv_service.py           # Core IGV API integration
 │   │   │   ├── session_builder.py       # Session construction & configuration
 │   │   │   └── track_registry.py        # Track management & registry
+│   │   ├── ml_service/                  # machine leanring service
+│   │   ├── data_service/                # Hosted/reference datasets management
+│   │   ├── visualization_service/       # visualization service
+│   │   ├── annotation_service/          # annotation service
 │   │   ├── llm_service.py               # LLM integration (Ollama, LLaMA3, DeepSeek)
 │   │   ├── logger_service.py            # Centralized logging & log formatting
 │   │   ├── model_zoo_service.py         # ML/DL model registry & loader

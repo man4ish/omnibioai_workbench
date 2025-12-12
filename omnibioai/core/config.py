@@ -6,6 +6,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 UPLOAD_DIR = os.path.join(DATA_DIR, "uploads")
+RESULTS_DIR = os.path.join(DATA_DIR, "results")
 REPORT_DIR = os.path.join(DATA_DIR, "reports")
 LOG_DIR = os.path.join(DATA_DIR, "logs")
 STATIC_DIR = os.path.join(BASE_DIR, "static")
@@ -36,8 +37,42 @@ ALLOWED_FILE_EXTENSIONS = ["vcf", "h5", "csv", "json", "pdf"]
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "INFO")
 
 # ----------------------------
+# Dataset / Reference Data Settings
+# ----------------------------
+DATASET_DIR = os.path.join(DATA_DIR, "datasets")
+DEFAULT_DATASETS = {
+    "gnomAD": {"version": "v3.1", "path": os.path.join(DATASET_DIR, "gnomad")},
+    "ClinVar": {"version": "202512", "path": os.path.join(DATASET_DIR, "clinvar")},
+    "RefSeq": {"version": "2025-12", "path": os.path.join(DATASET_DIR, "refseq")}
+}
+
+# ----------------------------
+# Annotation Service
+# ----------------------------
+ANNOTATION_CACHE_SIZE = int(os.environ.get("ANNOTATION_CACHE_SIZE", 10000))
+
+# ----------------------------
+# ML / AI Service
+# ----------------------------
+ML_MODELS_DIR = os.path.join(DATA_DIR, "ml_models")
+DEFAULT_ML_MODELS = {
+    "variant_predictor": {"version": "1.0", "file": os.path.join(ML_MODELS_DIR, "variant_predictor.pkl")},
+    "gene_expression_model": {"version": "1.0", "file": os.path.join(ML_MODELS_DIR, "gene_expression.pkl")}
+}
+
+# ----------------------------
+# Visualization Service
+# ----------------------------
+VISUALIZATION_DIR = os.path.join(DATA_DIR, "visualizations")
+PLOT_FORMATS = ["png", "pdf", "html"]
+
+# ----------------------------
 # Helper function to ensure directories exist
 # ----------------------------
 def ensure_directories():
-    for path in [DATA_DIR, UPLOAD_DIR, REPORT_DIR, LOG_DIR, STATIC_DIR]:
+    paths = [
+        DATA_DIR, UPLOAD_DIR, RESULTS_DIR, REPORT_DIR, LOG_DIR, STATIC_DIR,
+        DATASET_DIR, ML_MODELS_DIR, VISUALIZATION_DIR
+    ]
+    for path in paths:
         os.makedirs(path, exist_ok=True)
