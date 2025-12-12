@@ -1,4 +1,50 @@
-# utils/validators.py
+"""
+validators.py
+-------------
+
+Utility functions for validating different file types including VCF, CSV, HDF5, and JSON. 
+Raises `ValidationError` for invalid files or unsupported formats.
+
+Main Features
+-------------
+1. Custom exception
+   - ValidationError
+       Exception raised when a file fails validation.
+
+2. VCF validation
+   - validate_vcf(path: str) -> bool
+       Validate a VCF file (.vcf or .vcf.gz) by checking existence and mandatory header (#CHROM).
+
+3. CSV validation
+   - validate_csv(path: str, min_columns: int = 1) -> bool
+       Validate a CSV file, ensuring it exists and has at least `min_columns` in the header.
+
+4. HDF5 validation
+   - validate_h5(path: str) -> bool
+       Validate an HDF5 (.h5 or .hdf5) file by opening the root group.
+
+5. JSON validation
+   - validate_json(path: str) -> bool
+       Validate a JSON file by attempting to load it.
+
+6. File type router
+   - validate_file(path: str) -> bool
+       Dispatches validation based on file extension. Supports VCF, CSV, HDF5, and JSON.
+
+Dependencies
+------------
+- os, gzip, h5py, csv, json
+
+Usage Example
+-------------
+from utils.validators import validate_file, ValidationError
+
+try:
+    validate_file("data/sample.vcf.gz")
+except ValidationError as e:
+    print(f"Validation failed: {e}")
+"""
+
 import os
 import gzip
 import h5py
