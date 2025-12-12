@@ -21,9 +21,15 @@ omnibioai_workbench/
 ├── manage.py                     # Django management script
 ├── db.sqlite3                    # SQLite DB (dev)
 ├── README.md                     # Project overview & contribution guide
-├── requirements.txt
-├── Dockerfile
-├── start_app.sh
+├── requirements.txt              # Python dependencies
+├── docker/                       # Docker-related files
+│   ├── Dockerfile                # Main Dockerfile
+│   └── docker-compose.yml        # Compose scripts
+├── scripts/                      # Utility & setup scripts
+│   ├── start_app.sh              # Start the application
+│   └── wait-for-ollama.sh        # Wait-for-service helper script
+├── kubernetes/                   # Kubernetes manifests & Helm charts
+
 
 ├── data/                         # Centralized data storage
 │   ├── uploads/                  # Uploaded user files (VCF, H5, CSV, etc.)
