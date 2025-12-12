@@ -1,3 +1,58 @@
+"""
+pickle_utils.py
+---------------
+
+Utility functions for saving and loading Python objects and metadata, with optional 
+versioning and DVC integration. Supports pickle serialization, JSON metadata storage, 
+timestamp-based versioning, and automatic addition of files to DVC.
+
+Main Features
+-------------
+1. Pickle save/load utilities
+   - save_pickle(obj, path: str, overwrite=False)
+       Save a Python object to a .pkl file.
+   - load_pickle(path: str)
+       Load a Python object from a .pkl file.
+
+2. Metadata utilities
+   - save_metadata(meta: dict, path: str)
+       Save metadata dictionary to a JSON file.
+   - load_metadata(path: str)
+       Load metadata JSON file.
+
+3. Versioned save
+   - save_pickle_versioned(obj, output_dir="models", base_name="model", description="", framework="", hyperparameters=None)
+       Save object with timestamp-based versioning and metadata.
+       Returns tuple of (pickle_path, metadata_path).
+
+4. DVC integration helpers
+   - dvc_add(path: str)
+       Add a file to DVC tracking.
+   - dvc_push()
+       Push all DVC-tracked files to remote storage.
+   - save_pickle_with_dvc(obj, output_dir="models", base_name="model", description="", framework="", hyperparameters=None)
+       Save an object with versioning, metadata, and add it to DVC.
+       Returns tuple of (pickle_path, metadata_path).
+
+Dependencies
+------------
+- os, pickle, json, subprocess, datetime
+
+Usage Example
+-------------
+from utils.pickle_utils import save_pickle_versioned, load_pickle, save_pickle_with_dvc
+
+# Save a model with versioning
+pickle_path, meta_path = save_pickle_versioned(model, base_name="my_model", description="Test model")
+
+# Load the model
+model_loaded = load_pickle(pickle_path)
+
+# Save with DVC tracking
+pickle_path, meta_path = save_pickle_with_dvc(model, base_name="my_model")
+"""
+
+
 import os
 import pickle
 import json

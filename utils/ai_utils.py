@@ -1,3 +1,57 @@
+"""
+utils_nlp.py
+------------
+
+Utility functions for NLP workflows using PyTorch, HuggingFace Transformers, and scikit-learn. 
+Includes helpers for reproducibility, device selection, timing, model/tokenizer loading, embedding 
+normalization and similarity computations, standard metrics, and miscellaneous utilities.
+
+Main Features
+-------------
+1. Reproducibility & Device
+   - set_seed(seed: int = 42)
+       Set random seed for Python, NumPy, and PyTorch for reproducible results.
+   - get_device() -> str
+       Return 'cuda' if a GPU is available, else 'cpu'.
+
+2. Timer for benchmarking
+   - timer(name="task")
+       Context manager to measure execution time of a code block.
+
+3. Model & Tokenizer helpers
+   - load_hf_model(model_name: str, task: str = None, device: str = None)
+       Load a HuggingFace model and tokenizer, or a pipeline for a specified task.
+
+4. Embedding utilities
+   - normalize_embeddings(embeddings)
+       Normalize embeddings to unit L2 norm.
+   - cosine_similarity(a: torch.Tensor, b: torch.Tensor)
+       Compute cosine similarity between two embedding matrices.
+
+5. Metrics
+   - compute_metrics(y_true, y_pred)
+       Compute standard metrics: accuracy and macro F1 score.
+
+6. Miscellaneous Helpers
+   - ensure_dir(path: str)
+       Create a directory if it does not exist.
+
+Dependencies
+------------
+- os, random, time, contextlib
+- numpy, torch, scikit-learn, transformers
+
+Usage Example
+-------------
+from utils_nlp import set_seed, get_device, load_hf_model, compute_metrics
+
+set_seed(123)
+device = get_device()
+model, tokenizer = load_hf_model("bert-base-uncased")
+metrics = compute_metrics([0,1], [0,1])
+"""
+
+
 import os
 import random
 import time

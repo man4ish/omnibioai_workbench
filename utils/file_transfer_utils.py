@@ -1,3 +1,37 @@
+"""
+download_upload.py
+------------------
+
+Utility functions for downloading and uploading files over HTTP. 
+Supports retries, automatic directory creation, and optional extraction of compressed files.
+
+Main Features
+-------------
+1. Download utility
+   - download_file(url: str, output_dir: str = "data", overwrite: bool = False, unzip: bool = True, retries: int = 3) -> str
+       Download a file from a URL to the specified directory.
+       Supports retry attempts, overwriting existing files, and automatic extraction for .gz and .zip files.
+
+2. Upload utility
+   - upload_file(file_path: str, url: str, retries: int = 3) -> bool
+       Upload a file to a specified URL using HTTP POST.
+       Supports retry attempts and raises FileNotFoundError if the file does not exist.
+
+Dependencies
+------------
+- os, gzip, shutil, zipfile, pathlib, requests
+
+Usage Example
+-------------
+from utils.download_upload import download_file, upload_file
+
+# Download a file and automatically unzip if compressed
+path = download_file("https://example.com/data.zip")
+
+# Upload a file
+success = upload_file("data/file.txt", "https://example.com/upload")
+"""
+
 import os
 import gzip
 import shutil
