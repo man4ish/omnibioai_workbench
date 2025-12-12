@@ -68,6 +68,8 @@ omnibioai_workbench/
 │   │   │   ├── igv_service.py           # Core IGV API integration
 │   │   │   ├── session_builder.py       # Session construction & configuration
 │   │   │   └── track_registry.py        # Track management & registry
+│   │   ├── ml_service/                  # machine leanring service
+│   │   ├── visualization_service/       # visualization service
 │   │   ├── llm_service.py               # LLM integration (Ollama, LLaMA3, DeepSeek)
 │   │   ├── logger_service.py            # Centralized logging & log formatting
 │   │   ├── model_zoo_service.py         # ML/DL model registry & loader
