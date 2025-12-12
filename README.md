@@ -12,14 +12,13 @@ Additionally, a **Tutorials section** includes script-based example workflows an
 
 Here is the architecture of OmniBioAI Workbench:
 
-![OmniBioAI Architecture](static/figures/Architecture_.png)
+![OmniBioAI Architecture](static/images/Architecture_.png)
 
 ## Project Structure
 
 ```
 omnibioai_workbench/
 ├── manage.py                     # Django management script
-├── main_demo.py                  # Standalone demo to test core services
 ├── db.sqlite3                    # SQLite DB (dev)
 ├── README.md                     # Project overview & contribution guide
 ├── requirements.txt
