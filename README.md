@@ -81,6 +81,7 @@ omnibioai_workbench/
 │   │   │   ├── session_builder.py       # Session construction & configuration
 │   │   │   └── track_registry.py        # Track management & registry
 │   │   ├── ml_service/                  # machine leanring service
+│   │   ├── data_service/                # Hosted/reference datasets management
 │   │   ├── visualization_service/       # visualization service
 │   │   ├── annotation_service/          # annotation service
 │   │   ├── llm_service.py               # LLM integration (Ollama, LLaMA3, DeepSeek)
