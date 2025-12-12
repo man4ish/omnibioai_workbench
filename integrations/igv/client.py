@@ -1,5 +1,5 @@
 import socket
-from .exceptions import IGVConnectionError, IGVCommandError
+from integrations.igv.exceptions import IGVConnectionError, IGVCommandError
 
 class IGVClient:
     """
@@ -47,16 +47,22 @@ class IGVClient:
     # Convenience wrappers
     # -------------------------------
     def load(self, path: str):
+        """Load a file in IGV."""
         return self.send(f"load {path}")
 
     def set_genome(self, genome: str):
+        """Set the genome in IGV."""
         return self.send(f"genome {genome}")
 
     def goto(self, locus: str):
+        """Go to a specific locus in IGV."""
         return self.send(f"goto {locus}")
 
     def snapshot(self, filename: str):
+        """Take a snapshot of the current view."""
         return self.send(f"snapshot {filename}")
 
     def snapshot_directory(self, path: str):
+        """Set the directory for snapshots."""
         return self.send(f"snapshotDirectory {path}")
+

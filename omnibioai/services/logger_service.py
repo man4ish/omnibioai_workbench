@@ -1,3 +1,5 @@
+# logger_service.py
+
 import logging
 
 logger = logging.getLogger("OmniBioAI")

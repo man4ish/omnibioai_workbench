@@ -2,7 +2,7 @@
 
 import pandas as pd
 from omnibioai.services.upload_service import UploadService
-# from omnibioai.services.rag_service import RAGServiceCore
+from omnibioai.services.rag_service import RAGServiceCore
 from omnibioai.services.llm_service import LLMService
 from omnibioai.services.reporting_service import ReportingService
 from omnibioai.services.network_viz import NetworkVisualizer
@@ -57,7 +57,7 @@ report_service.create_chart(df, x_col="PMID", y_col="Rank", chart_type="bar", fi
 
 # Save PDF with table + chart
 report_service.save_pdf(df, filename="rag_report.pdf", chart_cols=("PMID","Rank"))
-
+"""
 # ----------------------------
 # 5. Generate Network Visualization
 # ----------------------------
@@ -70,6 +70,6 @@ nodes_edges = {
 }
 network_service.build_graph(nodes_edges)
 network_service.save_graph(filename="rag_network.png")
-
+"""
 logger.info("OmniBioAI Core Services Demo Completed Successfully!")
 

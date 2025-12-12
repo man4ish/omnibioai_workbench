@@ -1,3 +1,4 @@
+# permissions.py
 def check_permission(user, service_name):
     role_permissions = {
         "admin": ["upload", "rag_query", "report", "network_viz"],

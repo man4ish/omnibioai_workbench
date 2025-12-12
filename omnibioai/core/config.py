@@ -14,7 +14,7 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 # RAG / Model Settings
 # ----------------------------
 RAG_EMBEDDING_MODEL = os.environ.get("RAG_EMBEDDING_MODEL", "BioBERT")
-RAG_LLM_MODEL = os.environ.get("RAG_LLM_MODEL", "DeepSeek/LLaMA3")
+RAG_LLM_MODEL = os.environ.get("RAG_LLM_MODEL", "deepseek-r1:latest")
 TOP_K = int(os.environ.get("RAG_TOP_K", 5))
 USE_GPU = os.environ.get("RAG_USE_GPU", "False").lower() == "true"
 
