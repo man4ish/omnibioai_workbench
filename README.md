@@ -87,6 +87,7 @@ omnibioai_workbench/
 │   │   │   ├── session_builder.py       # Session construction & configuration
 │   │   │   └── track_registry.py        # Track management & registry
 │   │   ├── ml_service/                  # machine leanring service
+│   │   ├── workflow_service/            # Orchestrates pipelines (Nextflow, Snakemake, WDL)
 │   │   ├── data_service/                # Hosted/reference datasets management
 │   │   ├── visualization_service/       # visualization service
 │   │   ├── annotation_service/          # annotation service
