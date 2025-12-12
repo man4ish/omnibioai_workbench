@@ -5,6 +5,7 @@ import tempfile
 import hashlib
 import pandas as pd
 from pathlib import Path
+import requests
 from contextlib import contextmanager
 
 # -------------------------
@@ -110,3 +111,4 @@ def open_file(path: str, mode="rt"):
     if path.endswith(".gz"):
         return gzip.open(path, mode)
     return open(path, mode)
+
