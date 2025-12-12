@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # -----------------------------
@@ -38,7 +38,7 @@ services:
       retries: 5
 
   # -----------------------------
-  # Optional Redis cache
+  # Redis (for Celery & caching)
   # -----------------------------
   redis:
     image: redis:7
@@ -53,7 +53,7 @@ services:
       retries: 5
 
   # -----------------------------
-  # Django Webapp
+  # Django Web Application
   # -----------------------------
   webapp:
     build:
@@ -78,10 +78,71 @@ services:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
       - logs:/app/logs
-    command: ["./wait-for-service.sh", "ollama", "11434", "60", "--", \
-              "./wait-for-service.sh", "db", "5432", "60", "--", \
-              "./wait-for-service.sh", "redis", "6379", "60", "--", \
-              "gunicorn", "omnibioai.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+    command:
+      [
+        "./wait-for-service.sh", "ollama", "11434", "60", "--",
+        "./wait-for-service.sh", "db", "5432", "60", "--",
+        "./wait-for-service.sh", "redis", "6379", "60", "--",
+        "gunicorn", "omnibioai.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"
+      ]
+    restart: unless-stopped
+
+  # -----------------------------
+  # Celery Worker - runs async tasks + pipelines
+  # -----------------------------
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      webapp:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://omnibioai:secretpassword@db:5432/omnibioai
+      REDIS_URL: redis://redis:6379
+    command: ["celery", "-A", "omnibioai", "worker", "--loglevel=INFO"]
+    volumes:
+      - workflows:/app/workflows
+      - logs:/app/logs
+    restart: unless-stopped
+
+  # -----------------------------
+  # Celery Beat - schedules tasks
+  # -----------------------------
+  celery_beat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      REDIS_URL: redis://redis:6379
+    command: ["celery", "-A", "omnibioai", "beat", "--loglevel=INFO"]
+    restart: unless-stopped
+
+  # -----------------------------
+  # Workflow Runner (Nextflow, Snakemake, WDL)
+  # -----------------------------
+  workflow_runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      redis:
+        condition: service_healthy
+      webapp:
+        condition: service_started
+    environment:
+      WORKFLOW_HOME: /app/workflows
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - workflows:/app/workflows
+      - workflow_runs:/app/workflow_runs
+      - logs:/app/logs
+    command: ["sleep", "infinity"]
     restart: unless-stopped
 
 # -----------------------------
@@ -94,3 +155,5 @@ volumes:
   static_volume:
   media_volume:
   logs:
+  workflows:
+  workflow_runs:
