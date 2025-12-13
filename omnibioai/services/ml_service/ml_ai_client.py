@@ -130,7 +130,7 @@ class MLAIClient:
 
             Respond in JSON format only.
             """
-            response = self.llm_service.query(prompt)
+            response = self.llm_service.prompt(prompt)
             try:
                 suggestion = eval(response)
             except Exception:

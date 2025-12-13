@@ -1,6 +1,8 @@
 # tests/core_services/demo_annotation_service.py
 import pandas as pd
-from omnibioai.services.annotation_service import AnnotationService
+
+from omnibioai.services.annotation_service.annotation_service import AnnotationService
+
 
 def main():
     # Initialize the service
