@@ -1,8 +1,38 @@
 """
 nextflow_adapter.py
 
-Adapter for executing Nextflow workflows.
+Provides an adapter for executing workflows using the Nextflow engine.
+
+This module defines `NextflowAdapter`, a concrete implementation of
+`BaseWorkflowAdapter` that allows the OmnibioAI workflow service to
+execute Nextflow pipelines via the command-line interface (CLI).
+
+Key Features:
+- CLI-based execution: Invokes Nextflow directly using subprocess,
+  allowing full control over pipeline execution.
+- Parameter injection: Automatically converts workflow parameters
+  into CLI arguments for the Nextflow process.
+- Real-time logging: Streams stdout and stderr lines as workflow
+  execution progresses.
+- Progress tracking: Emits incremental progress updates, useful for
+  monitoring workflow status in real time.
+
+Design Considerations:
+- The adapter ensures that the working directory exists before
+  execution.
+- Progress reporting is heuristic and may not reflect the exact
+  completion percentage of Nextflow pipelines.
+- Exceptions are raised if the Nextflow process exits with a
+  non-zero status.
+
+Example Usage:
+    from omnibioai.services.workflow_service.adapters.nextflow_adapter import NextflowAdapter
+
+    adapter = NextflowAdapter(nextflow_bin="nextflow")
+    for progress, log in adapter.run("main.nf", "./work", {"sample": "SAMPLE1"}):
+        print(progress, log)
 """
+
 
 import subprocess
 import os

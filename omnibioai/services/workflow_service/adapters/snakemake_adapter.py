@@ -1,3 +1,42 @@
+"""
+snakemake_adapter.py
+
+Provides an adapter for executing workflows using the Snakemake engine.
+
+This module defines `SnakemakeAdapter`, a concrete implementation that
+allows the OmnibioAI workflow service to execute Snakemake pipelines
+via the command-line interface (CLI).
+
+Key Features:
+- CLI-based execution: Invokes Snakemake directly using subprocess,
+  supporting full pipeline control.
+- Configurable execution: Supports `cores`, `config` dictionaries,
+  working directory, and additional parameters.
+- Real-time logging: Streams stdout and stderr lines as the workflow
+  progresses when `progress=True`.
+- Progress reporting: Emits incremental step-based progress updates
+  to help monitor workflow execution.
+
+Design Considerations:
+- Ensures that the working directory exists before execution.
+- Progress is heuristic and may not reflect exact workflow completion.
+- Raises exceptions if the Snakemake process exits with a non-zero
+  status.
+
+Example Usage:
+    from omnibioai.services.workflow_service.adapters.snakemake_adapter import SnakemakeAdapter
+
+    adapter = SnakemakeAdapter(snakemake_bin="snakemake")
+    for progress, log in adapter.run(
+        entrypoint="Snakefile",
+        work_dir="./work",
+        config={"sample": "SAMPLE1"},
+        progress=True,
+        params={"cores": 4}
+    ):
+        print(progress, log)
+"""
+
 import subprocess
 import os
 
