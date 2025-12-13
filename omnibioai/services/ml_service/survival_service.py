@@ -1,4 +1,18 @@
-# ml_service/survival_service.py
+"""
+survival_service.py
+
+Survival analysis services for OmnibioAI.
+
+Provides functionality to perform survival analysis, including:
+- Kaplan-Meier estimator for survival curves
+- Cox Proportional Hazards regression for multivariate survival modeling
+
+Classes
+-------
+SurvivalService
+    Offers methods to fit Kaplan-Meier curves and Cox regression models on survival datasets.
+"""
+
 from typing import Any, Dict
 import pandas as pd
 from lifelines import KaplanMeierFitter, CoxPHFitter

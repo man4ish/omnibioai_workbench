@@ -1,4 +1,67 @@
-# ml_service/ml_utils.py
+"""
+ml_utils.py
+
+Utility functions for evaluating, visualizing, and interpreting machine learning models.
+
+This module provides functions for:
+
+- Plotting evaluation metrics for classification models, including:
+    - Confusion matrix
+    - ROC curve
+    - Precision-recall curve
+    - Learning curve
+    - Validation curve
+- Visualizing feature importance
+- Printing common classification metrics (accuracy, precision, recall, F1-score)
+
+Functions
+---------
+plot_confusion_matrix(y_true, y_pred, labels=None, normalize=False, title=None)
+    Plots a confusion matrix for classification results.
+
+plot_roc_curve(y_true, y_score, pos_label=1, title=None)
+    Plots the Receiver Operating Characteristic (ROC) curve and computes AUC.
+
+plot_precision_recall_curve(y_true, y_score, pos_label=1, title=None)
+    Plots the precision-recall curve and computes average precision.
+
+plot_learning_curve(estimator, X, y, cv=5, scoring=None, title=None)
+    Plots the learning curve to visualize training and cross-validation performance.
+
+plot_validation_curve(estimator, X, y, param_name, param_range, title=None)
+    Plots the validation curve for a given hyperparameter.
+
+plot_feature_importance(model, feature_names=None, top_n=20, title=None)
+    Visualizes the top N feature importances from a model.
+
+print_classification_metrics(y_true, y_pred, average='binary')
+    Prints key classification metrics (accuracy, precision, recall, F1-score).
+
+Usage Example
+-------------
+from ml_service import ml_utils as utils
+from sklearn.ensemble import RandomForestClassifier
+import pandas as pd
+
+# Load dataset
+df = pd.read_csv("data/sample.csv")
+X = df.drop(columns=["target"])
+y = df["target"]
+
+# Train a model
+model = RandomForestClassifier()
+model.fit(X, y)
+y_pred = model.predict(X)
+y_proba = model.predict_proba(X)[:, 1]
+
+# Visualizations
+utils.plot_confusion_matrix(y, y_pred)
+utils.plot_roc_curve(y, y_proba)
+utils.plot_precision_recall_curve(y, y_proba)
+utils.plot_feature_importance(model, X.columns, top_n=10)
+utils.print_classification_metrics(y, y_pred)
+"""
+
 from typing import Optional
 import matplotlib.pyplot as plt
 import seaborn as sns

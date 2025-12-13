@@ -1,3 +1,55 @@
+"""
+Module: dataset_manager
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    Provides the DatasetManager class for managing datasets in OmniBioAI.
+    Supports fetching hosted datasets, local caching, versioning, registration,
+    and applying transformations (e.g., normalization, indexing, annotation prep).
+
+Usage:
+    from omnibioai.services.dataset_manager import DatasetManager
+
+    manager = DatasetManager()
+
+    # Fetch the latest version of a hosted dataset
+    dataset_info = manager.get_dataset("gnomAD")
+    print(dataset_info)
+    # Output: {'files': ['~/.omnibioai_datasets/gnomAD_v3.1.vcf.gz'], 'version': 'v3.1'}
+
+    # Transform the dataset (e.g., normalization)
+    transformed_info = manager.transform_dataset("gnomAD", transformation="normalize")
+    print(transformed_info)
+    # Output: {'files': ['~/.omnibioai_datasets/gnomAD_v3.1_normalize.vcf.gz'], 'version': 'v3.1'}
+
+Classes:
+    - DatasetManager:
+        Manages datasets including fetching, caching, versioning, registration,
+        and transformations.
+
+        Methods:
+            * __init__(cache_dir: Optional[str] = None):
+                Initializes the manager with a cache directory, DataFetcher, and DataTransformers.
+            * register_dataset(name: str, files: list, version: str):
+                Registers a local dataset with name, files, and version.
+            * get_dataset(name: str, version: Optional[str] = None) -> dict:
+                Retrieves dataset by name and optional version. Downloads if not cached.
+            * transform_dataset(name: str, version: Optional[str] = None, transformation: str = "normalize") -> dict:
+                Applies a transformation to the dataset and returns transformed file paths.
+
+Constants:
+    - DEFAULT_CACHE_DIR: Default cache directory in the user home folder.
+
+Dependencies:
+    - os: For path and directory management.
+    - typing: For type hints (Optional, Dict, Any).
+    - DataFetcher: Downloads and caches hosted datasets.
+    - DataTransformers: Applies transformations to datasets.
+"""
+
+
 import os
 from typing import Optional, Dict, Any
 from .data_fetcher import DataFetcher

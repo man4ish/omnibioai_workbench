@@ -1,3 +1,37 @@
+"""
+Module: llm_service
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    This module provides the LLMService class for interacting with Ollama 
+    large language models (LLMs), such as DeepSeek or LLaMA3. It allows 
+    sending prompts to the model and retrieving generated responses.
+
+Usage:
+    from llm_service import LLMService
+
+    # Initialize the service
+    llm = LLMService(model_name="DeepSeek")
+
+    # Generate a response
+    response_text = llm.prompt(
+        text="Explain CRISPR gene editing.",
+        temperature=0.7,
+        max_tokens=512
+    )
+
+Classes:
+    - LLMService: Encapsulates interaction with Ollama LLMs. Provides a
+      method `prompt` to send text prompts and receive generated responses.
+
+Dependencies:
+    - ollama: Python client for Ollama LLM server.
+    - omnibioai.core.config: For default RAG_LLM_MODEL.
+    - omnibioai.services.logger_service: For logging.
+"""
+
 import ollama
 from omnibioai.core.config import RAG_LLM_MODEL
 from omnibioai.services.logger_service import logger

@@ -1,3 +1,16 @@
+"""
+job/models.py
+
+Defines the Job model for tracking computational or bioinformatics workflow executions.
+
+A Job represents a single workflow run submitted by a user, including its status,
+progress, result location, and execution logs. This model is used to monitor and
+manage pipelines in the application.
+
+Attributes:
+    STATUS_CHOICES (list of tuple): Possible states of a job - queued, running, completed, failed.
+"""
+
 from django.db import models
 from django.contrib.auth.models import User
 

@@ -1,4 +1,19 @@
-# ml_service/time_series_service.py
+"""
+time_series_service.py
+
+Time series forecasting services for OmnibioAI.
+
+Provides functionality to model and forecast univariate time series data using:
+- ARIMA (AutoRegressive Integrated Moving Average)
+- SARIMA (Seasonal ARIMA)
+- Placeholder for Bayesian forecasting methods
+
+Classes
+-------
+TimeSeriesService
+    Offers methods to fit ARIMA and SARIMA models and generate forecasts.
+"""
+
 from typing import Any, Dict
 import pandas as pd
 from statsmodels.tsa.arima.model import ARIMA

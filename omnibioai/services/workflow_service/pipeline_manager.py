@@ -1,3 +1,19 @@
+"""
+pipeline_manager.py
+
+Central manager for scheduling, launching, and tracking bioinformatics workflows
+implemented in Nextflow, Snakemake, and WDL.
+
+This module provides a unified interface to launch pipelines asynchronously via
+Celery tasks and track their status. Each workflow type (Nextflow, Snakemake, WDL)
+is supported through a dedicated launch method. Active pipelines are stored in
+an internal dictionary for reference.
+
+Classes:
+--------
+PipelineManager
+    Manages pipeline scheduling and status tracking.
+"""
 from .executor import run_nextflow_workflow, run_snakemake_workflow, run_wdl_workflow
 from celery.result import AsyncResult
 

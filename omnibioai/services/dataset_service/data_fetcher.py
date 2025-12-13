@@ -1,3 +1,50 @@
+"""
+Module: data_fetcher
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    Provides the DataFetcher class to download and cache hosted datasets with versioning.
+    Supports fetching datasets by name and version, automatically downloading them if not
+    already cached locally.
+
+Usage:
+    from omnibioai.services.data_fetcher import DataFetcher
+
+    fetcher = DataFetcher(cache_dir="data/cache")
+
+    # Fetch the latest gnomAD dataset
+    dataset_info = fetcher.fetch("gnomAD")
+    print(dataset_info)
+    # Output: {"files": ["data/cache/gnomAD_v3.1.vcf.gz"], "version": "v3.1"}
+
+    # Fetch a specific version
+    dataset_info_v2 = fetcher.fetch("gnomAD", version="v2.1")
+    print(dataset_info_v2)
+
+Classes:
+    - DataFetcher:
+        Downloads and caches hosted reference datasets.
+
+        Methods:
+            * __init__(cache_dir: str):
+                Initializes the fetcher and ensures the cache directory exists.
+            * fetch(name: str, version: Optional[str] = None) -> dict:
+                Returns dataset information including local file paths and version.
+                Downloads the dataset if it is not already cached.
+            * _download(url: str, dest_path: str):
+                Internal method to download a file from a URL to the local cache.
+
+Constants:
+    - HOSTED_DATASETS: Placeholder dictionary mapping dataset names and versions to URLs.
+
+Dependencies:
+    - os: For path and directory management.
+    - typing.Optional, Dict, Any: For type hints.
+    - requests: For downloading datasets from URLs.
+"""
+
 import os
 from typing import Optional, Dict, Any
 

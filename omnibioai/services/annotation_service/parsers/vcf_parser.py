@@ -1,3 +1,39 @@
+"""
+Module: vcf_parser
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    Provides the VCFParser class for querying indexed VCF files using pysam.TabixFile.
+    Supports retrieval of variant annotations for given chromosome, position, reference, and alternate alleles.
+
+Usage:
+    from omnibioai.services.parsers.vcf_parser import VCFParser
+
+    parser = VCFParser("data/reference/gnomad.vcf.gz")
+
+    variant_info = parser.query_variant("1", 1234567, "A", "T")
+    print(variant_info)
+    # Output: {'chrom': '1', 'pos': 1234567, 'ref': 'A', 'alt': 'T', 'info': {'AF': '0.01', ...}}
+
+Classes:
+    - VCFParser:
+        Provides variant-level queries for tabix-indexed VCF files.
+        
+        Methods:
+            * __init__(vcf_path: str):
+                Initializes the parser and opens the VCF file with pysam.TabixFile.
+            * query_variant(chrom: str, pos: int, ref: str, alt: str) -> dict:
+                Queries a specific variant and returns annotation as a dictionary.
+                If the variant is not found, 'info' will be None.
+
+Dependencies:
+    - pysam: For querying tabix-indexed VCF files.
+    - typing.Dict: For type hinting the return value.
+"""
+
+
 import pysam
 from typing import Dict
 

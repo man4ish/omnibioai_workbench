@@ -1,3 +1,29 @@
+"""
+workflow_executor.py
+
+Defines Celery tasks and utilities for executing bioinformatics workflows
+(Nextflow, Snakemake, and WDL) asynchronously, tracking progress in the
+database, and sending real-time updates via WebSockets.
+
+This module provides:
+- Celery app configuration for distributed task execution.
+- Workflow adapters for Nextflow, Snakemake, and WDL pipelines.
+- Utility functions to create Job entries in the database.
+- Functions to update Job progress and notify connected clients via Channels.
+- Celery tasks to run workflows asynchronously and update Job status/logs.
+
+Key Components:
+- `app` (Celery): Configured Celery application with Redis backend.
+- `create_job(plugin_name, user_id) -> Job`: Create a Job entry in the database.
+- `notify_progress(job)`: Send WebSocket updates about the Job.
+- `update_job_progress(job, progress, logs)`: Update Job progress and logs.
+- `run_nextflow_workflow`, `run_snakemake_workflow`, `run_wdl_workflow`:
+  Celery tasks that execute workflows via their respective adapters.
+
+Jobs are tracked using the `Job` Django model, with status transitions
+from 'queued' → 'running' → 'completed'/'failed'.
+"""
+
 import uuid
 from celery import Celery, current_task
 from asgiref.sync import async_to_sync

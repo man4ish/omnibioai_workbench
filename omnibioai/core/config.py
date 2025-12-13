@@ -1,3 +1,20 @@
+"""
+Module: config
+Author: Manish Kumar
+Description: 
+    Contains global configuration constants for OmniBioAI Workbench, including:
+    - Workspace paths
+    - RAG / ML model settings
+    - Database / Neo4j settings
+    - File upload settings
+    - Logging configuration
+    - Dataset / reference data paths
+    - Annotation service parameters
+    - Visualization service options
+Usage:
+    Import this module wherever configuration values are needed across the project.
+"""
+
 import os
 
 # ----------------------------

@@ -1,3 +1,62 @@
+"""
+Module: agentic_ai_service
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    Provides the AgenticAIService class, an asynchronous AI agent service 
+    for dynamic, step-by-step experiment planning using LangChain and Ollama LLMs.
+    The service integrates RAG (Retrieval-Augmented Generation), experiment tracking,
+    and model recommendations to suggest analyses, genes/pathways, and relevant literature.
+
+Usage:
+    from agentic_ai_service import AgenticAIService
+    import asyncio
+
+    # Initialize service
+    agentic_service = AgenticAIService()
+
+    # Run asynchronous pipeline
+    dataset_metadata = {"task_type": "classification"}
+    plugin_outputs = ["Clustering"]
+    query = "Genes involved in metabolism"
+    
+    result = asyncio.run(
+        agentic_service.run_agentic_pipeline(dataset_metadata, plugin_outputs, query)
+    )
+    print(result)
+
+Classes:
+    - AgenticAIService:
+        An AI agent service that integrates:
+            * RAGService for retrieving contextual knowledge.
+            * ExperimentTrackingService for logging suggestions.
+            * ModelZooService for model recommendations.
+            * Ollama LLM for natural language reasoning.
+        Provides asynchronous methods for suggesting next analysis steps, relevant genes/pathways,
+        literature, and running an end-to-end agentic pipeline.
+
+Methods:
+    - __init__(): Initializes the service, LLM, tools, and agent.
+    - _init_plugin_graph(): Sets up a plugin dependency graph.
+    - _agent_suggest_analysis(input_text: str) -> str: Suggests next plugin steps.
+    - _agent_suggest_genes_pathways(query: str) -> str: Suggests genes or pathways.
+    - _agent_suggest_literature(query: str) -> str: Suggests relevant literature titles.
+    - suggest_genes_or_pathways(query: str) -> List[str]: Async method to extract genes/pathways.
+    - suggest_literature(query: str, top_k: int) -> List[Dict]: Async retrieval of literature.
+    - get_model_recommendations(task_type: str) -> List[str]: Returns recommended models.
+    - run_agentic_pipeline(dataset_metadata: Dict, plugin_outputs: List[str], query: str) -> Dict:
+        Executes the full agentic AI pipeline asynchronously.
+
+Dependencies:
+    - asyncio: For asynchronous execution.
+    - functools.lru_cache: For caching model recommendations.
+    - LangChain (langchain, langchain_ollama): For agent and LLM integration.
+    - langgraph: For plugin dependency graph management.
+    - omnibioai.services: logger_service, rag_service, experiment_tracking_service, model_zoo_service.
+"""
+
 import asyncio
 from functools import lru_cache
 from typing import List, Dict

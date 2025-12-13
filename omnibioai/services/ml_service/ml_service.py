@@ -1,4 +1,54 @@
-# manishair/services/ml_service/ml_service.py
+"""
+ml_service.py
+
+Core Machine Learning & Statistics service for tabular data.
+
+This module provides the `MLService` class, which implements utility functions 
+for:
+
+- Supervised learning (classification and regression)
+- Unsupervised learning (clustering)
+- Dimensionality reduction (PCA)
+- Feature preprocessing (scaling, encoding)
+
+The service is designed for rapid experimentation with scikit-learn and XGBoost 
+models, and it returns trained models along with evaluation metrics, predictions, 
+and additional relevant outputs.
+
+Classes
+-------
+MLService
+    Provides methods to train supervised and unsupervised models, apply PCA, 
+    and handle feature preprocessing.
+
+Usage Example
+-------------
+from ml_service import MLService
+import pandas as pd
+
+# Load data
+df = pd.read_csv("data/sample_data.csv")
+
+# Initialize service
+ml_service = MLService()
+
+# Train a classification model
+result = ml_service.train_classification(df, target_col="label", model_type="random_forest")
+print(result["metrics"])
+
+# Train a regression model
+reg_result = ml_service.train_regression(df, target_col="target", model_type="linear_regression")
+print(reg_result["metrics"])
+
+# Apply clustering
+cluster_result = ml_service.train_clustering(df, method="kmeans", n_clusters=4)
+print(cluster_result["labels"])
+
+# Apply PCA
+pca_result = ml_service.apply_pca(df, n_components=3)
+print(pca_result["explained_variance_ratio"])
+"""
+
 
 import os
 from typing import Optional, List, Dict, Any, Tuple

@@ -1,4 +1,32 @@
-# omnibioai/services/visualization_ai_client.py
+"""
+visualization_ai_client.py
+
+AI-assisted visualization client for OmnibioAI.
+
+This module provides a high-level interface to suggest and generate data 
+visualizations using either AI-based recommendations or user-specified plot types. 
+It integrates with `plot_dispatch` to produce various plots and optionally 
+leverages a language model (LLM) to recommend the most appropriate visualization 
+based on dataset characteristics and analytical goals.
+
+Classes
+-------
+VisualizationAIClient
+    - suggest_plot(df, goal=None): Suggests plot type and parameters using AI.
+    - _fallback_suggest(df, goal=None): Heuristic fallback for plot suggestion.
+    - create_plot(df, plot_type=None, save_path_prefix=None, return_types=None, goal=None, **kwargs):
+      Generates the visualization using AI suggestions or explicit plot type.
+
+Usage
+-----
+>>> from omnibioai.services.visualization_ai_client import VisualizationAIClient
+>>> client = VisualizationAIClient()
+>>> df = my_dataframe
+>>> plot_type, plot_params = client.suggest_plot(df, goal="variance")
+>>> res = client.create_plot(df, plot_type=plot_type, **plot_params)
+>>> print(res["file_path"])
+"""
+
 
 from typing import Optional, Dict, Any, Tuple
 import pandas as pd

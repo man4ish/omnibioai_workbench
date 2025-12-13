@@ -1,4 +1,57 @@
-# ml_service/ml_ai_client.py
+"""
+Module: ml_ai_client
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    Provides the MLAIClient class, which acts as a unified interface for
+    machine learning, deep learning, NLP, time series, and survival analysis.
+    Supports both rule-based and LLM-based AI suggestions for model selection,
+    automatic dispatch to specialized services, and optional MLflow tracking.
+    Includes utility functions for model evaluation and visualization.
+
+Usage:
+    from omnibioai.ml_service.ml_ai_client import MLAIClient
+    import pandas as pd
+
+    df = pd.read_csv("dataset.csv")
+    client = MLAIClient(use_mlflow=True, device="cuda")
+
+    # Suggest a model
+    suggestion = client.suggest_model(df, goal="classification", mode="ai")
+
+    # Train the suggested model
+    result = client.train_model(df, target_col="label", goal="classification", mode="ai")
+    print(result["metrics"])
+
+Classes:
+    - MLAIClient:
+        Unified ML client with rule-based and LLM-based model suggestions.
+
+        Attributes:
+            deep_learning_service (DeepLearningService): Handles CNN/LSTM/Transformer models.
+            time_series_service (TimeSeriesService): Handles time series modeling.
+            nlp_service (NLPService): Handles NLP tasks.
+            survival_service (SurvivalService): Handles survival analysis.
+            mlflow_service (MLFlowTrackingService | None): Optional MLflow logger.
+            llm_service (LLMService): Used for AI-based model suggestions.
+
+        Methods:
+            suggest_model(df: pd.DataFrame, goal: Optional[str] = None, mode: str = "rule") -> Dict[str, Any]:
+                Suggests the best model for a dataset using rules or LLM-based AI.
+
+            train_model(df: pd.DataFrame, target_col: str, goal: Optional[str] = None, mode: str = "rule", **kwargs) -> Dict[str, Any]:
+                Suggests and trains a model automatically, dispatching to the appropriate service.
+                Optionally logs to MLflow and produces evaluation plots.
+
+Dependencies:
+    - pandas: For DataFrame manipulation.
+    - DeepLearningService, TimeSeriesService, NLPService, SurvivalService, MLFlowTrackingService
+      (from the omnibioai.ml_service package)
+    - LLMService: For AI-based model suggestions.
+"""
+
 from typing import Optional, Dict, Any
 import pandas as pd
 
