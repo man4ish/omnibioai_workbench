@@ -32,3 +32,5 @@ new_venv/
 # macOS
 .DS_Store
 bin
+tests/coreservices
+data

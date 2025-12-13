@@ -716,7 +716,7 @@ def plot_lollipop(
 
     # Matplotlib
     fig_mpl = plt.figure(figsize=(6, 4))
-    plt.stem(df_sorted[category_col], df_sorted[value_col], basefmt=" ", use_line_collection=True)
+    plt.stem(df_sorted[category_col], df_sorted[value_col], basefmt=" ")
     plt.xlabel(category_col)
     plt.ylabel(value_col)
     plt.title(f"Lollipop plot: {value_col} by {category_col}")

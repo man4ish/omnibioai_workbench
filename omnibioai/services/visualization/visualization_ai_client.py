@@ -33,7 +33,7 @@ import pandas as pd
 import json
 
 from .plot_dispatch import plot_dispatch
-from .llm_service import LLMService  # assumes you have a service for LLM calls
+from ..llm_service import LLMService  # assumes you have a service for LLM calls
 
 
 class VisualizationAIClient:
@@ -85,7 +85,7 @@ class VisualizationAIClient:
         }}
         """
         # call LLM
-        response_text = self.llm.ask(prompt)
+        response_text = self.llm.prompt(prompt)
         try:
             response_json = json.loads(response_text)
             plot_type = response_json.get("plot_type")

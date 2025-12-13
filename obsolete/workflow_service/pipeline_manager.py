@@ -14,7 +14,7 @@ Classes:
 PipelineManager
     Manages pipeline scheduling and status tracking.
 """
-from .executor import run_nextflow_workflow, run_snakemake_workflow, run_wdl_workflow
+
 from celery.result import AsyncResult
 
 class PipelineManager:

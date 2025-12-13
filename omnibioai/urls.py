@@ -32,7 +32,6 @@ urlpatterns = [
     path('plugins/literature_summarizer/', include('plugins.literature_summarizer.urls')),
     path('plugins/network_analysis/', include('plugins.network_analysis.urls')),
     path('plugins/single_cell_analysis/', include('plugins.single_cell_analysis.urls')),
-    path("dashboard/", include("plugins.workflow_dashboard.urls")),
     # Serve tutorials (pointing to README.md or any file inside tutorials)
     # Corrected: use 'path' instead of 'filename'
     re_path(r'^tutorials/(?P<path>.+)$', serve, {

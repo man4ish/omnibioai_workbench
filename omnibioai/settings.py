@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'widget_tweaks',
     "users",
-    "plugins.workflow_dashboard",
     'plugins.pipeline_manager.apps.PipelineManagerConfig',
     'plugins.gene_annotation.apps.GeneAnnotationConfig',
     'plugins.home.apps.HomeConfig',

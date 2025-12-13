@@ -47,10 +47,7 @@ from .visualization_service import (
     plot_heatmap,
     plot_boxplot,
     plot_histogram,
-    plot_scatter,
     plot_bar,
-    plot_stacked_bar,
-    plot_pie,
     plot_lollipop,
 )
 
@@ -62,10 +59,7 @@ _PLOT_FN_MAP = {
     "heatmap": plot_heatmap,
     "boxplot": plot_boxplot,
     "histogram": plot_histogram,
-    "scatter": plot_scatter,
     "bar": plot_bar,
-    "stacked_bar": plot_stacked_bar,
-    "pie": plot_pie,
     "lollipop": plot_lollipop,
 }
 
