@@ -1,0 +1,92 @@
+rule all:
+    input:
+        "sorted_{prefix}_sample.bam",
+        "sorted_{prefix}_sample.bam.bai",
+        "{prefix}.rna.summary",
+        "{prefix}_position.vs.coverage.plot.pdf",
+        "{prefix}_kallisto_output.tar.gz"
+
+rule trim:
+    input:
+        fastq1="{fastq1}",
+        fastq2="{fastq2}",
+        adapters="{adapters}"
+    output:
+        trimmed1="{prefix}-trimmed-pair1.fastq",
+        trimmed2="{prefix}-trimmed-pair2.fastq"
+    threads: 4
+    container: "docker.io/man4ish/rnaseq:latest"
+    shell:
+        """
+        skewer -t {threads} -y {input.adapters} -l 30 {input.fastq1} {input.fastq2} -o {wildcards.prefix}
+        """
+
+rule kallisto_quant:
+    input:
+        fastq1="{prefix}-trimmed-pair1.fastq",
+        fastq2="{prefix}-trimmed-pair2.fastq",
+        idx="{idx}",
+        gtf="{gtf}"
+    output:
+        "{prefix}_kallisto_output.tar.gz"
+    threads: 4
+    container: "docker.io/man4ish/rnaseq:latest"
+    shell:
+        """
+        mkdir {wildcards.prefix}_output
+        /software/utils/kallisto quant -t {threads} -b 100 --rf-stranded --genomebam -i {input.idx} -g {input.gtf} {input.fastq1} {input.fastq2} -o {wildcards.prefix}_output
+        tar -cvzf {output} {wildcards.prefix}_output
+        """
+
+rule star_align:
+    input:
+        fastq1="{prefix}-trimmed-pair1.fastq",
+        fastq2="{prefix}-trimmed-pair2.fastq",
+        ref_tar="{ref_tar}"
+    output:
+        "{prefix}_sample.bam"
+    threads: 8
+    container: "docker.io/man4ish/rnaseq:latest"
+    shell:
+        """
+        mkdir ref_bundle
+        tar -xzf {input.ref_tar} -C ref_bundle --no-same-owner
+        ref_path=$(realpath ref_bundle)
+        mv ref_bundle/*/* ref_bundle
+        /software/utils/STAR --genomeDir $ref_path --runThreadN {threads} --outSAMtype BAM Unsorted --readFilesIn {input.fastq1} {input.fastq2} --outFileNamePrefix {wildcards.prefix}_sample
+        cp {wildcards.prefix}_sampleAligned.out.bam {output}
+        """
+
+rule sort_index:
+    input:
+        "{prefix}_sample.bam"
+    output:
+        bam="sorted_{prefix}_sample.bam",
+        bai="sorted_{prefix}_sample.bam.bai"
+    threads: 4
+    container: "docker.io/man4ish/rnaseq:latest"
+    shell:
+        """
+        samtools sort {input} > {output.bam}
+        samtools index {output.bam}
+        """
+
+rule picard_summary:
+    input:
+        bam="sorted_{prefix}_sample.bam",
+        ref_flat="{ref_flat}",
+        ribosomal_interval="{ribosomal_interval}",
+        ref_seq="{ref_seq}"
+    output:
+        summary="{prefix}.rna.summary",
+        plot="{prefix}_position.vs.coverage.plot.pdf"
+    container: "docker.io/man4ish/rnaseq:latest"
+    shell:
+        """
+        java -jar /software/utils/picard.jar CollectRnaSeqMetrics METRIC_ACCUMULATION_LEVEL=ALL_READS \
+            REF_FLAT={input.ref_flat} RIBOSOMAL_INTERVALS={input.ribosomal_interval} \
+            STRAND_SPECIFICITY=SECOND_READ_TRANSCRIPTION_STRAND \
+            CHART_OUTPUT={output.plot} \
+            INPUT={input.bam} OUTPUT={output.summary} \
+            REFERENCE_SEQUENCE={input.ref_seq} VALIDATION_STRINGENCY=LENIENT
+        """

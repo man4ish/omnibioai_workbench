@@ -79,7 +79,7 @@ from matplotlib.backends.backend_pdf import PdfPages
 from typing import List, Dict, Tuple
 from .logger_service import logger
 from .llm_service import LLMService
-from .network_viz import NetworkViz
+from .network_viz import NetworkVisualizer
 from .igv_service import IGVService
 from omnibioai.core.config import REPORT_DIR
 
@@ -89,7 +89,7 @@ class ReportingService:
         os.makedirs(report_dir, exist_ok=True)
         self.report_dir = report_dir
         self.llm = llm or LLMService()
-        self.network_viz = NetworkViz()
+        self.network_viz = NetworkVisualizer()
         self.igv_service = IGVService()
 
     def save_json(self, data: Dict, filename="report.json") -> str:

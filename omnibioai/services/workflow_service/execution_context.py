@@ -7,7 +7,7 @@ This module provides the `ExecutionContext` data class, which encapsulates
 essential metadata for a single workflow run. It is designed to be used
 by workflow adapters and pipeline managers to track, organize, and manage
 workflow executions consistently across different workflow engines
-(e.g., Nextflow, Snakemake, WDL).
+(e.g., Nextflow, Snakemake, WDL, CWL).
 
 The ExecutionContext includes:
 - `run_id`: A unique identifier for each workflow execution.
@@ -20,22 +20,13 @@ Key Features:
   with automatically assigned unique IDs and start timestamps.
 - Facilitates integration with logging, monitoring, and workflow state tracking
   components of the OmniBioAI workflow service.
-
-Example Usage:
-    from omnibioai.services.workflow_service.execution_context import ExecutionContext
-
-    # Create a new execution context for a workflow
-    ctx = ExecutionContext.create(work_dir="/path/to/workdir")
-
-    print(ctx.run_id)       # Unique execution ID
-    print(ctx.start_time)   # Execution start timestamp
-    print(ctx.work_dir)     # Working directory path
+- Adds `list_outputs()` method to collect workflow output files.
 """
-
 
 from dataclasses import dataclass
 from datetime import datetime
 import uuid
+import os
 
 
 @dataclass
@@ -54,8 +45,20 @@ class ExecutionContext:
 
     @staticmethod
     def create(work_dir: str) -> "ExecutionContext":
+        os.makedirs(work_dir, exist_ok=True)
         return ExecutionContext(
             run_id=str(uuid.uuid4()),
             start_time=datetime.utcnow(),
             work_dir=work_dir
         )
+
+    def list_outputs(self):
+        """
+        Return a list of all files in the workflow working directory,
+        including subdirectories. Can be used to persist workflow outputs.
+        """
+        outputs = []
+        for root, dirs, files in os.walk(self.work_dir):
+            for file in files:
+                outputs.append(os.path.join(root, file))
+        return outputs
