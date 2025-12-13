@@ -1,3 +1,55 @@
+"""
+Module: network_visualizer
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    Provides the NetworkVisualizer class for building, visualizing, and exporting network graphs.
+    Uses NetworkX to manage graph structure and matplotlib for static visualization.
+    Supports exporting graphs as Cytoscape-compatible JSON for interactive frontend use.
+
+Usage:
+    from omnibioai.services.network_visualizer import NetworkVisualizer
+
+    visualizer = NetworkVisualizer(output_dir="data/reports")
+
+    nodes_edges = {
+        "nodes": [{"id": "n1", "label": "Node 1"}, {"id": "n2", "label": "Node 2"}],
+        "edges": [{"source": "n1", "target": "n2"}]
+    }
+
+    # Build the graph
+    visualizer.build_graph(nodes_edges)
+
+    # Save static PNG
+    png_path = visualizer.save_static_graph("my_network.png")
+
+    # Export Cytoscape JSON
+    json_path = visualizer.export_cytoscape_json("my_network.json")
+
+Classes:
+    - NetworkVisualizer:
+        Class for creating, visualizing, and exporting network graphs.
+        
+        Methods:
+            * __init__(output_dir="data/reports"):
+                Initializes the visualizer, ensures output directory exists, and creates an empty graph.
+            * build_graph(nodes_edges: dict):
+                Builds a NetworkX graph from a dictionary containing nodes and edges.
+            * save_static_graph(filename="network.png") -> str:
+                Saves a static PNG visualization of the graph and returns the file path.
+            * export_cytoscape_json(filename="network.json") -> str:
+                Exports the graph as Cytoscape-compatible JSON for interactive visualization and returns the file path.
+
+Dependencies:
+    - os: For file and directory handling.
+    - json: For exporting Cytoscape JSON.
+    - networkx: For graph management.
+    - matplotlib.pyplot: For static graph visualization.
+    - omnibioai.services.logger_service.logger: For logging graph operations.
+"""
+
 import os
 import json
 import networkx as nx

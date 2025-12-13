@@ -52,6 +52,18 @@ INSTALLED_APPS = [
 
 ]
 
+INSTALLED_APPS += ["channels"]
+
+ASGI_APPLICATION = "omnibioai.asgi.application"
+
+# Redis channel layer
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {"hosts": [("redis", 6379)]},  # match your docker-compose redis service
+    }
+}
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",

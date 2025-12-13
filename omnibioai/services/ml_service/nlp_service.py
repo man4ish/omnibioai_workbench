@@ -1,4 +1,18 @@
-# ml_service/nlp_service.py
+"""
+nlp_service.py
+
+Natural Language Processing (NLP) services for OmnibioAI.
+
+Provides functionality to train and manage NLP models, including:
+- Traditional methods: TF-IDF + Naive Bayes
+- Transformer-based models (Hugging Face) [placeholder]
+
+Classes
+-------
+NLPService
+    Offers methods to train NLP models for text classification and other tasks.
+"""
+
 from typing import Any, Dict
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB

@@ -1,3 +1,76 @@
+"""
+Module: reporting_service
+Author: Manish Kumar
+Version: 1.0
+Date: 2025-12-12
+
+Description:
+    Provides the ReportingService class for generating multi-format reports in OmniBioAI.
+    Supports JSON and CSV outputs, chart creation, network visualizations, IGV snapshots,
+    LLM-generated summaries, and consolidated PDF reports. Designed for scientific reporting
+    and data exploration in bioinformatics workflows.
+
+Usage:
+    from omnibioai.services.reporting_service import ReportingService
+    import pandas as pd
+    import asyncio
+
+    df = pd.DataFrame({"Gene": ["GeneA", "GeneB"], "Expression": [10, 15]})
+    reporter = ReportingService()
+
+    # Save JSON
+    json_path = reporter.save_json({"summary": "Test report"})
+
+    # Save table CSV
+    csv_path = reporter.save_table(df)
+
+    # Create chart
+    chart_path = reporter.create_chart(df, x_col="Gene", y_col="Expression", chart_type="bar")
+
+    # Generate LLM summary (async)
+    llm_summary = asyncio.run(reporter.generate_llm_summary(df, context="Gene expression data"))
+
+    # Save consolidated PDF report
+    pdf_path = reporter.save_pdf(
+        df,
+        filename="final_report.pdf",
+        chart_cols=("Gene", "Expression"),
+        llm_summary=llm_summary
+    )
+
+Classes:
+    - ReportingService:
+        Service for generating scientific reports in multiple formats. Integrates:
+            * LLMService for summaries.
+            * NetworkViz for network figures.
+            * IGVService for genome browser snapshots.
+
+        Methods:
+            * __init__(report_dir=REPORT_DIR, llm: LLMService = None):
+                Initializes the reporting service and required components.
+            * save_json(data: dict, filename="report.json") -> str:
+                Saves a dictionary as a JSON file.
+            * save_table(dataframe: pd.DataFrame, filename="report.csv") -> str:
+                Saves a DataFrame as a CSV file.
+            * create_chart(dataframe: pd.DataFrame, x_col, y_col, chart_type="bar", filename="chart.png") -> str:
+                Generates and saves a chart from a DataFrame.
+            * generate_llm_summary(dataframe: pd.DataFrame, context: str = "") -> str:
+                Generates an asynchronous LLM-based summary for the dataset.
+            * generate_network_figure(network_data, filename="network.png") -> str:
+                Generates a network visualization and saves it as an image.
+            * generate_igv_snapshot(igv_session, filename="igv_snapshot.png") -> str:
+                Captures and saves a genome browser snapshot.
+            * save_pdf(dataframe: pd.DataFrame, filename="report.pdf", chart_cols: Tuple[str, str] = None, agentic_suggestions: List[str] = None, extra_figures: List[str] = None, llm_summary: str = None, network_figures: List[str] = None, igv_snapshots: List[str] = None) -> str:
+                Creates a multi-page PDF report combining tables, charts, figures, LLM summaries, and suggestions.
+
+Dependencies:
+    - os, json, pandas, matplotlib.pyplot, matplotlib.backends.backend_pdf.PdfPages
+    - LLMService, NetworkViz, IGVService
+    - omnibioai.core.config.REPORT_DIR
+    - omnibioai.services.logger_service.logger
+"""
+
+
 import os
 import json
 import pandas as pd

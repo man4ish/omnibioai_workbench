@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: omnibioai
+  namespace: omnibioai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: omnibioai
+  template:
+    metadata:
+      labels:
+        app: omnibioai
+    spec:
+      containers:
+        - name: omnibioai
+          image: omnibioai:latest
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DEBUG
+              value: "0"
+            - name: DATABASE_URL
+              value: "postgres://omnibioai:secretpassword@postgres:5432/omnibioai"
+            - name: REDIS_URL
+              value: "redis://redis:6379"
+            - name: OLLAMA_ENDPOINT
+              value: "http://ollama:11434/api/generate"
+          volumeMounts:
+            - name: static-volume
+              mountPath: /app/staticfiles
+            - name: media-volume
+              mountPath: /app/media
+      volumes:
+        - name: static-volume
+          emptyDir: {}
+        - name: media-volume
+          emptyDir: {}
+

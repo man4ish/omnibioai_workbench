@@ -1,4 +1,52 @@
-# omnibioai/services/visualization_service.py
+"""
+visualization_service.py
+
+Core plotting and visualization utilities for OmnibioAI.
+
+This module provides a comprehensive suite of plotting functions for genomic,
+omics, and general data analysis workflows. It supports both static (Matplotlib)
+and interactive (Plotly) outputs, with optional PNG export via Plotly/Kaleido.
+Functions handle typical bioinformatics plots (PCA, Volcano, Manhattan, Heatmap,
+Boxplot, Lollipop, Bar, Histogram, Pie/Donut, Line/Scatter) and allow reading
+from a pandas DataFrame or CSV path.
+
+Features:
+---------
+- Headless plotting for server environments (Matplotlib 'Agg' backend)
+- PCA computation with Plotly and Matplotlib outputs
+- Volcano, Manhattan, Heatmap, Boxplot, Bar, Pie/Donut, Line/Scatter, Lollipop plots
+- IGV.js-compatible track metadata generation
+- Convenience wrapper to select the preferred output format (plotly JSON, PNG bytes)
+- Automatic results directory creation and safe file saving
+- Optional sample or group annotations for plots
+- Return metadata for downstream processing
+
+Key Functions:
+--------------
+- plot_pca(): Principal Component Analysis plot
+- plot_volcano(): Volcano plot for differential analysis
+- plot_manhattan(): Manhattan plot for GWAS or genomic data
+- plot_heatmap(): Heatmap from numeric matrices
+- plot_boxplot(): Grouped or univariate boxplot
+- plot_histogram(): Histogram for numeric columns
+- plot_bar(): Bar plot for categorical summaries
+- plot_pie_donut(): Pie or donut chart
+- plot_line_scatter(): Line or scatter plot
+- plot_lollipop(): Lollipop plot for category vs value
+- igv_track_meta(): Generate IGV.js track metadata
+- choose_best_output(): Select preferred output format from plotting result
+
+Usage:
+------
+>>> from omnibioai.services.visualization_service import plot_pca
+>>> import pandas as pd
+>>> df = pd.DataFrame(...)  # your data
+>>> res = plot_pca(df, sample_column="sample_id", save_path_prefix="pca_demo")
+>>> print(res["explained_variance_ratio"])
+>>> if "file_path" in res:
+>>>     print("Saved plot to:", res["file_path"])
+"""
+
 
 import os
 import io
@@ -668,7 +716,7 @@ def plot_lollipop(
 
     # Matplotlib
     fig_mpl = plt.figure(figsize=(6, 4))
-    plt.stem(df_sorted[category_col], df_sorted[value_col], basefmt=" ", use_line_collection=True)
+    plt.stem(df_sorted[category_col], df_sorted[value_col], basefmt=" ")
     plt.xlabel(category_col)
     plt.ylabel(value_col)
     plt.title(f"Lollipop plot: {value_col} by {category_col}")

@@ -1,4 +1,41 @@
-# omnibioai/services/plot_dispatch.py
+"""
+plot_dispatch.py
+
+Centralized plot dispatching service for OmnibioAI.
+
+This module provides a unified interface to generate a wide variety of plots
+by dispatching calls to specific plotting functions in `visualization_service`.
+It supports both exploratory and publication-ready visualizations.
+
+Supported plot types:
+- PCA: Principal Component Analysis plots
+- Volcano: Volcano plots for differential expression
+- Manhattan: Manhattan plots for GWAS data
+- Heatmap: Hierarchical clustering heatmaps
+- Boxplot: Box-and-whisker plots
+- Histogram: Data distribution histograms
+- Scatter: Scatter plots
+- Bar: Simple bar plots
+- Stacked_bar: Stacked bar plots
+- Pie: Pie charts
+- Lollipop: Lollipop charts
+
+Functions
+---------
+plot_dispatch(plot_type, df=None, csv_path=None, save_path_prefix=None,
+              return_types=None, results_dir=None, **kwargs)
+    Dispatch to the appropriate plotting function based on `plot_type`.
+    Returns plotly figures, PNG bytes, and metadata for further use.
+
+Example
+-------
+>>> from plot_dispatch import plot_dispatch
+>>> res = plot_dispatch(plot_type="pca", df=my_dataframe, sample_column="sample_id")
+>>> print(res["explained_variance_ratio"])
+>>> if res.get("file_path"):
+>>>     print("Saved to:", res["file_path"])
+"""
+
 
 from typing import Optional, Dict, Any, Union, List
 import pandas as pd
@@ -10,10 +47,7 @@ from .visualization_service import (
     plot_heatmap,
     plot_boxplot,
     plot_histogram,
-    plot_scatter,
     plot_bar,
-    plot_stacked_bar,
-    plot_pie,
     plot_lollipop,
 )
 
@@ -25,10 +59,7 @@ _PLOT_FN_MAP = {
     "heatmap": plot_heatmap,
     "boxplot": plot_boxplot,
     "histogram": plot_histogram,
-    "scatter": plot_scatter,
     "bar": plot_bar,
-    "stacked_bar": plot_stacked_bar,
-    "pie": plot_pie,
     "lollipop": plot_lollipop,
 }
 
