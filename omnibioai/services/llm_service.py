@@ -33,6 +33,7 @@ Dependencies:
 """
 
 import ollama
+import asyncio
 from omnibioai.core.config import RAG_LLM_MODEL
 from omnibioai.services.logger_service import logger
 
@@ -73,3 +74,10 @@ class LLMService:
         except Exception as e:
             logger.error(f"LLM generation failed: {e}")
             return ""
+
+    async def generate_async(self, text: str, temperature: float = 0.7, max_tokens: int = 512) -> str:
+        """
+        Async wrapper for the synchronous `prompt` method.
+        """
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self.prompt, text, temperature, max_tokens)        

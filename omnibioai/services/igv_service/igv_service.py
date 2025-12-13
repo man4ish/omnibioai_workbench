@@ -64,7 +64,8 @@ import json
 import urllib.parse
 from .track_registry import TrackRegistry
 from .session_builder import IGVSessionBuilder
-
+from PIL import Image, ImageDraw
+from ..igv_helpers import write_igv_html, capture_igv_snapshot
 
 class IGVService:
 
@@ -97,3 +98,24 @@ class IGVService:
             return path
 
         raise ValueError("Unsupported mode")
+
+    def generate_igv_snapshot(self, igv_session: dict, filename="igv_snapshot.png") -> str:
+        path = os.path.join(self.report_dir, filename)
+        html_file = os.path.join(self.report_dir, "temp_igv.html")
+
+        write_igv_html(igv_session, html_file)
+        capture_igv_snapshot(html_file, path)
+        os.remove(html_file)
+
+        return path  
+
+    def capture_snapshot(self, session, path):
+        """
+        Placeholder method for generating IGV snapshot.
+        Creates a dummy PNG for demo purposes.
+        """
+        img = Image.new("RGB", (800, 600), color="white")
+        draw = ImageDraw.Draw(img)
+        draw.text((50, 50), "IGV Snapshot Placeholder", fill="black")
+        img.save(path)
+        return path    

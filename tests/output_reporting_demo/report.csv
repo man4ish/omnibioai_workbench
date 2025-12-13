@@ -1,0 +1,4 @@
+Gene,Expression,PValue
+GeneA,10,0.01
+GeneB,15,0.05
+GeneC,7,0.2
