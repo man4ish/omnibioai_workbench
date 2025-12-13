@@ -1,0 +1,41 @@
+#!/bin/bash
+
+cd /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution
+tmpDir=$(mktemp -d "$PWD"/tmp.XXXXXX)
+
+export _JAVA_OPTIONS=-Djava.io.tmpdir="$tmpDir"
+export TMPDIR="$tmpDir"
+
+
+(
+cd /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution
+
+)
+
+
+outb718a54f="${tmpDir}/out.$$" errb718a54f="${tmpDir}/err.$$"
+mkfifo "$outb718a54f" "$errb718a54f"
+trap 'rm "$outb718a54f" "$errb718a54f"' EXIT
+touch '/home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution/stdout' '/home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution/stderr'
+tee '/home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution/stdout' < "$outb718a54f" &
+tee '/home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution/stderr' < "$errb718a54f" >&2 &
+(
+cd /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution
+
+
+echo "Hello from OmnibioAI WDL workflow"
+)  > "$outb718a54f" 2> "$errb718a54f"
+echo $? > /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution/rc.tmp
+(
+# add a .file in every empty directory to facilitate directory delocalization on the cloud
+cd /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution
+find . -type d -exec sh -c '[ -z "$(ls -A '"'"'{}'"'"')" ] && touch '"'"'{}'"'"'/.file' \;
+)
+(
+cd /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution
+sync
+
+
+)
+mv /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution/rc.tmp /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/b718a54f-1065-4b9b-9885-f73dbbcbaf15/call-hello/execution/rc
+

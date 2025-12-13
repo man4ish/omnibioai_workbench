@@ -6,6 +6,7 @@ Description:
     - Workspace paths
     - RAG / ML model settings
     - Database / Neo4j settings
+    - MySQL workflow provenance settings
     - File upload settings
     - Logging configuration
     - Dataset / reference data paths
@@ -42,6 +43,16 @@ USE_GPU = os.environ.get("RAG_USE_GPU", "False").lower() == "true"
 NEO4J_URI = os.environ.get("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.environ.get("NEO4J_USER", "neo4j")
 NEO4J_PASSWORD = os.environ.get("NEO4J_PASSWORD", "password")
+
+# ----------------------------
+# MySQL Workflow Provenance
+# ----------------------------
+MYSQL_CONFIG = {
+    "host": os.environ.get("MYSQL_HOST", "localhost"),
+    "user": os.environ.get("MYSQL_USER", "root"),
+    "password": os.environ.get("MYSQL_PASSWORD", "root"),
+    "database": os.environ.get("MYSQL_DB", "omnibioai")
+}
 
 # ----------------------------
 # File / Upload Settings

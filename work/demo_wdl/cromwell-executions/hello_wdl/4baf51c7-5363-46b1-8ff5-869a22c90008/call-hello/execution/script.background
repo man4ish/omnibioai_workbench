@@ -1,0 +1,3 @@
+#!/bin/bash
+'/bin/bash' '/home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/4baf51c7-5363-46b1-8ff5-869a22c90008/call-hello/execution/script.submit' < /dev/null || { rc=$?; if [ "$rc" -gt "128" ]; then echo $rc; else echo -1; fi } > /home/manish/Desktop/machine/omnibioai_workbench/work/demo_wdl/cromwell-executions/hello_wdl/4baf51c7-5363-46b1-8ff5-869a22c90008/call-hello/execution/rc &
+echo $!

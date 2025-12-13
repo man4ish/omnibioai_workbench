@@ -13,7 +13,7 @@
     WORKDIR /app
     
     # -----------------------------
-    # Install system packages
+    # Install system packages including MySQL server
     # -----------------------------
     RUN apt-get update && apt-get install -y \
         build-essential \
@@ -31,6 +31,7 @@
         samtools \
         zip \
         default-mysql-client \
+        mysql-server \
         libdbi-perl \
         libdbd-mysql-perl \
         cpanminus \
@@ -41,8 +42,14 @@
         python3.11-dev \
         redis-tools \
         snakemake \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
+     && apt-get clean && rm -rf /var/lib/apt/lists/*
+    
+    # -----------------------------
+    # Initialize MySQL
+    # -----------------------------
+    RUN service mysql start && \
+        mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'; FLUSH PRIVILEGES;" && \
+        mysql -e "CREATE DATABASE IF NOT EXISTS omnibioai;"
     
     # -----------------------------
     # Python environment
@@ -96,12 +103,6 @@
     ENV SNPEFF_HOME="/opt/snpEff"
     ENV PATH="${SNPEFF_HOME}:${PATH}"
     
-    # ANNOVAR
-    #COPY bin/annovar.latest.tar /opt/
-    #RUN tar -xvf /opt/annovar.latest.tar -C /opt/ && rm /opt/annovar.latest.tar
-    #ENV ANNOVAR_HOME="/opt/annovar"
-    #ENV PATH="${ANNOVAR_HOME}:${PATH}"
-    
     # -----------------------------
     # Django: static & migrations
     # -----------------------------
@@ -113,5 +114,5 @@
     # Expose port and run server
     # -----------------------------
     EXPOSE 8000
-    CMD ["gunicorn", "omnibioai.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3"]
+    CMD service mysql start && gunicorn omnibioai.wsgi:application --bind 0.0.0.0:8000 --workers 3
     
