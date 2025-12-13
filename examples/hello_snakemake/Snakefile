@@ -1,0 +1,9 @@
+# Minimal Snakemake workflow for OmnibioAI demo
+
+rule all:
+    output:
+        "hello.txt"
+
+    shell:
+        "echo 'Hello from OmnibioAI Snakemake workflow' > hello.txt"
+

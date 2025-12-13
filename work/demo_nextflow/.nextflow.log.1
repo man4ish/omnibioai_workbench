@@ -1,0 +1,61 @@
+Dec-13 16:24:54.827 [main] DEBUG nextflow.cli.Launcher - $> nextflow run /home/manish/Desktop/machine/omnibioai_workbench/examples/hello_nextflow.nf
+Dec-13 16:24:54.883 [main] DEBUG nextflow.cli.CmdRun - N E X T F L O W  ~  version 25.10.0
+Dec-13 16:24:54.924 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; embedded=false; plugins-dir=/home/manish/.nextflow/plugins; core-plugins: nf-amazon@3.4.1,nf-azure@1.20.2,nf-cloudcache@0.5.0,nf-codecommit@0.5.0,nf-console@1.3.0,nf-google@1.23.3,nf-k8s@1.2.2,nf-tower@1.17.1,nf-wave@1.16.1
+Dec-13 16:24:54.940 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Dec-13 16:24:54.941 [main] INFO  o.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Dec-13 16:24:54.942 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.12.0 in 'deployment' mode
+Dec-13 16:24:54.950 [main] DEBUG nextflow.util.RetryConfig - Missing nextflow session - using default retry config
+Dec-13 16:24:55.021 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Dec-13 16:24:55.022 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Dec-13 16:24:55.022 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins resolved requirement=[]
+Dec-13 16:24:55.029 [main] DEBUG n.secret.LocalSecretsProvider - Secrets store: /home/manish/.nextflow/secrets/store.json
+Dec-13 16:24:55.035 [main] DEBUG nextflow.secret.SecretsLoader - Discovered secrets providers: [nextflow.secret.LocalSecretsProvider@7186333e] - activable => nextflow.secret.LocalSecretsProvider@7186333e
+Dec-13 16:24:55.040 [main] DEBUG nextflow.cli.CmdRun - Applied DSL=2 by global default
+Dec-13 16:24:55.054 [main] DEBUG nextflow.cli.CmdRun - Launching `/home/manish/Desktop/machine/omnibioai_workbench/examples/hello_nextflow.nf` [determined_carson] DSL2 - revision: d5dad8932b
+Dec-13 16:24:55.083 [main] DEBUG nextflow.Session - Session UUID: 4cca9787-0df6-4e2f-86c8-a86a65640279
+Dec-13 16:24:55.083 [main] DEBUG nextflow.Session - Run name: determined_carson
+Dec-13 16:24:55.083 [main] DEBUG nextflow.Session - Executor pool size: 20
+Dec-13 16:24:55.087 [main] DEBUG nextflow.file.FilePorter - File porter settings maxRetries=3; maxTransfers=50; pollTimeout=null
+Dec-13 16:24:55.090 [main] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'FileTransfer' minSize=10; maxSize=60; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Dec-13 16:24:55.101 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 25.10.0 build 10289
+  Created: 22-10-2025 16:26 UTC 
+  System: Linux 6.11.0-1016-nvidia
+  Runtime: Groovy 4.0.28 on OpenJDK 64-Bit Server VM 21.0.9+10-Ubuntu-124.04
+  Encoding: UTF-8 (UTF-8)
+  Process: 218022@spark-70f0 [127.0.0.1]
+  CPUs: 20 - Mem: 119.7 GB (71.3 GB) - Swap: 16 GB (16 GB)
+Dec-13 16:24:55.111 [main] DEBUG nextflow.Session - Work-dir: /home/manish/Desktop/machine/omnibioai_workbench/work/demo_nextflow/work [ext2/ext3]
+Dec-13 16:24:55.111 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /home/manish/Desktop/machine/omnibioai_workbench/examples/bin
+Dec-13 16:24:55.115 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Dec-13 16:24:55.120 [main] DEBUG nextflow.Session - Observer factory (v2): LinObserverFactory
+Dec-13 16:24:55.121 [main] DEBUG nextflow.Session - Observer factory (v2): DefaultObserverFactory
+Dec-13 16:24:55.141 [main] DEBUG nextflow.cache.CacheFactory - Using Nextflow cache factory: nextflow.cache.DefaultCacheFactory
+Dec-13 16:24:55.146 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 21; maxThreads: 1000
+Dec-13 16:24:55.194 [main] DEBUG nextflow.Session - Session start
+Dec-13 16:24:55.396 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Dec-13 16:24:55.438 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Dec-13 16:24:55.438 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Dec-13 16:24:55.443 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Dec-13 16:24:55.447 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=20; memory=119.7 GB; capacity=20; pollInterval=100ms; dumpInterval=5m
+Dec-13 16:24:55.449 [main] DEBUG n.processor.TaskPollingMonitor - >>> barrier register (monitor: local)
+Dec-13 16:24:55.467 [main] DEBUG nextflow.processor.TaskProcessor - Creating process 'hello': maxForks=0; fair=false; array=0
+Dec-13 16:24:55.500 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: hello
+Dec-13 16:24:55.501 [main] DEBUG nextflow.Session - Igniting dataflow network (1)
+Dec-13 16:24:55.502 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > hello
+Dec-13 16:24:55.502 [main] DEBUG nextflow.script.ScriptRunner - Parsed script files:
+  Script_fa3fa6b5c47f69bf: /home/manish/Desktop/machine/omnibioai_workbench/examples/hello_nextflow.nf
+Dec-13 16:24:55.502 [main] DEBUG nextflow.script.ScriptRunner - > Awaiting termination 
+Dec-13 16:24:55.502 [main] DEBUG nextflow.Session - Session await
+Dec-13 16:24:55.619 [Task submitter] DEBUG n.executor.local.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Dec-13 16:24:55.622 [Task submitter] INFO  nextflow.Session - [ab/667159] Submitted process > hello
+Dec-13 16:24:55.635 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: hello; status: COMPLETED; exit: 0; error: -; workDir: /home/manish/Desktop/machine/omnibioai_workbench/work/demo_nextflow/work/ab/667159d2c893772f619cf8a1a6a03f]
+Dec-13 16:24:55.636 [Task monitor] DEBUG nextflow.util.ThreadPoolBuilder - Creating thread pool 'TaskFinalizer' minSize=10; maxSize=60; workQueue=LinkedBlockingQueue[-1]; allowCoreThreadTimeout=false
+Dec-13 16:24:55.654 [main] DEBUG nextflow.Session - Session await > all processes finished
+Dec-13 16:24:55.732 [Task monitor] DEBUG n.processor.TaskPollingMonitor - <<< barrier arrives (monitor: local) - terminating tasks monitor poll loop
+Dec-13 16:24:55.732 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Dec-13 16:24:55.734 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'TaskFinalizer' shutdown completed (hard=false)
+Dec-13 16:24:55.738 [main] DEBUG n.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=1; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=3ms; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=1; peakCpus=1; peakMemory=0; ]
+Dec-13 16:24:55.823 [main] DEBUG nextflow.cache.CacheDB - Closing CacheDB done
+Dec-13 16:24:55.832 [main] DEBUG nextflow.util.ThreadPoolManager - Thread pool 'FileTransfer' shutdown completed (hard=false)
+Dec-13 16:24:55.832 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye
