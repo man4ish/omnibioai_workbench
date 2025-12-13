@@ -6,6 +6,8 @@ It features **LLM and RAG-based AI assistance** to provide insights, explanation
 
 Additionally, a **Tutorials section** includes script-based example workflows and projects, helping users learn applied AI, ML, and bioinformatics techniques step by step, while exploring the power of autonomous, agent-driven genomic analysis.
 
+**OmniBioAI** supports execution of bioinformatics workflows using Nextflow, Snakemake, and WDL, enabling flexible, reproducible, and scalable pipeline orchestration.
+
 ---
 
 ## Architecture
@@ -110,32 +112,7 @@ omnibioai_workbench/
 │       ├── validators.py         # Input validation (VCF/H5/CSV)
 │       ├── file_utils.py
 │       └── date_utils.py
-├──tests/                         # <-- New top-level folder for tests
-    ├── __init__.py
-    ├── core_services/
-    │   ├── __init__.py
-    │   ├── test_agentic_ai_service.py
-    │   ├── test_auth_service.py
-    │   ├── test_experiment_tracking_service.py
-    │   ├── test_llm_service.py
-    │   ├── test_logger_service.py
-    │   ├── test_model_zoo_service.py
-    │   ├── test_network_viz.py
-    │   ├── test_permissions.py
-    │   ├── test_rag_service.py
-    │   ├── test_reporting_service.py
-    │   ├── test_upload_service.py
-    │   └── test_user_models.py
-    ├── integrations/
-    │   ├── __init__.py
-    │   ├── test_neo4j.py
-    │   ├── test_ragbio.py
-    │   └── test_igv.py
-    └── utils/
-        ├── __init__.py
-        ├── test_validators.py
-        ├── test_file_utils.py
-        └── test_date_utils.py
+
 ```
 
 ---

@@ -17,7 +17,7 @@
     # -----------------------------
     RUN apt-get update && apt-get install -y \
         build-essential \
-        openjdk-11-jre-headless \
+        openjdk-17-jre-headless \
         perl \
         wget \
         unzip \
@@ -40,7 +40,9 @@
         python3.11-venv \
         python3.11-dev \
         redis-tools \
-        && apt-get clean && rm -rf /var/lib/apt/lists/*
+        snakemake \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
     
     # -----------------------------
     # Python environment
@@ -49,14 +51,12 @@
     ENV PATH="/opt/venv/bin:$PATH"
     
     COPY requirements.txt /app/
-    
     RUN pip install --upgrade pip && \
         pip install --no-cache-dir -r requirements.txt
     
     # -----------------------------
     # Install Workflow Tools
     # -----------------------------
-    
     # --- Nextflow ---
     RUN curl -s https://get.nextflow.io | bash && \
         mv nextflow /usr/local/bin/ && chmod +x /usr/local/bin/nextflow
@@ -66,7 +66,6 @@
             -O /usr/local/bin/cromwell.jar && \
         wget -q https://github.com/broadinstitute/cromwell/releases/download/86/womtool-86.jar \
             -O /usr/local/bin/womtool.jar
-    
     ENV CROMWELL="/usr/local/bin/cromwell.jar"
     ENV WOMTOOL="/usr/local/bin/womtool.jar"
     
@@ -78,7 +77,6 @@
     # -----------------------------
     # Bioinformatics tools
     # -----------------------------
-    
     # Picard
     RUN wget -q https://github.com/broadinstitute/picard/releases/download/2.27.4/picard.jar \
         -O /opt/picard.jar
@@ -99,16 +97,15 @@
     ENV PATH="${SNPEFF_HOME}:${PATH}"
     
     # ANNOVAR
-    COPY bin/annovar.latest.tar /opt/
-    RUN tar -xvf /opt/annovar.latest.tar -C /opt/ && rm /opt/annovar.latest.tar
-    ENV ANNOVAR_HOME="/opt/annovar"
-    ENV PATH="${ANNOVAR_HOME}:${PATH}"
+    #COPY bin/annovar.latest.tar /opt/
+    #RUN tar -xvf /opt/annovar.latest.tar -C /opt/ && rm /opt/annovar.latest.tar
+    #ENV ANNOVAR_HOME="/opt/annovar"
+    #ENV PATH="${ANNOVAR_HOME}:${PATH}"
     
     # -----------------------------
     # Django: static & migrations
     # -----------------------------
     RUN mkdir -p /app/staticfiles && chmod -R 755 /app/staticfiles
-    
     RUN python manage.py collectstatic --noinput || true
     RUN python manage.py migrate --noinput || true
     
