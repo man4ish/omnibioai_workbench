@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'widget_tweaks',
     "users",
+    "channels",
+    'omnibioai.services.workflow_service.dashboard',  # Add this line
     'plugins.pipeline_manager.apps.PipelineManagerConfig',
     'plugins.gene_annotation.apps.GeneAnnotationConfig',
     'plugins.home.apps.HomeConfig',
@@ -51,10 +53,6 @@ INSTALLED_APPS = [
 
 
 ]
-
-INSTALLED_APPS += ["channels"]
-
-ASGI_APPLICATION = "omnibioai.asgi.application"
 
 # Redis channel layer
 CHANNEL_LAYERS = {
@@ -148,3 +146,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # settings.py
 AUTH_USER_MODEL = "users.OmniBioUser"
+
+
+ASGI_APPLICATION = 'omnibioai.asgi.application'

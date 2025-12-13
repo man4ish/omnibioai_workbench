@@ -37,5 +37,7 @@ urlpatterns = [
     re_path(r'^tutorials/(?P<path>.+)$', serve, {
         'document_root': os.path.join(settings.BASE_DIR, 'tutorials'),
     }),
+    path('dashboard/', include('omnibioai.services.workflow_service.dashboard.urls')),  # Dashboard URLs
+    path('api/', include('omnibioai.services.workflow_service.api.urls')),
     path('', include('plugins.home.urls')),   # root path
 ]

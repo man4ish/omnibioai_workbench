@@ -1,14 +1,13 @@
-import os
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
-from django.core.asgi import get_asgi_application
-import plugins.workflow_dashboard.routing as dashboard_routing
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "omnibioai.settings")
+from django.urls import path
+from omnibioai.services.workflow_service.dashboard.websocket import WorkflowProgressConsumer
 
 application = ProtocolTypeRouter({
     "http": get_asgi_application(),
     "websocket": AuthMiddlewareStack(
-        URLRouter(dashboard_routing.websocket_urlpatterns)
+        URLRouter([
+            path("ws/workflow/progress/<int:workflow_id>/", WorkflowProgressConsumer.as_asgi()),
+        ])
     ),
 })
