@@ -34,3 +34,4 @@ new_venv/
 bin
 tests/coreservices
 data
+models
