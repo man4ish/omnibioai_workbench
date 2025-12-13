@@ -104,7 +104,6 @@ omnibioai_workbench/
 │   │   └── user_models.py               # User & role abstractions
 
 │   ├── integrations/             # External systems
-│   │   ├── ragbio/               # ✅ RAG-powered gene discovery package
 │   │   ├── neo4j/                # Knowledge graph integration
 │   │   └── igv/                  # IGV & genome browser hooks
 
